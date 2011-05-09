@@ -2,7 +2,7 @@ accessorize.js
 ==============
 _Add observable accessors to any object._
 
-***ALERT:*** Not quite working. I'll remove this once it is.
+***ALERT:*** Not quite working. I'll remove this notice once it is.
 
 `accessorize.js` makes it easy to convert plain javascript 'properties'
 into fancy-ass-observable-accessor-methods!

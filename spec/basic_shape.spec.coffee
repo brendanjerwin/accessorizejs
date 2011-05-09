@@ -10,5 +10,6 @@ vows.describe('basic shape of the api')
 
       'it should have a wrap function' : (tbn) -> assert.isFunction tbn.wrap
 
-      'it should not attach the global object (we are in node)' : -> assert.isUndefined global.TBN
+      'it should not attach the global object (we are in node)' : -> assert.isUndefined global.accessorize
+
 .export(module)

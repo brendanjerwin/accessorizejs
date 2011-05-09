@@ -18,20 +18,18 @@ _But wait! There's more!_
 In addition to the lovely accessor symantics, you'll also get change
 notification too!
 
-'''javascript
+```javascript
+var obj = accessorize.wrap({
+    propertyOne : "value",
+    propertyTwo : "another value"
+});
 
-    var obj = accessorize.wrap({
-        propertyOne : "value",
-        propertyTwo : "another value"
-    });
+obj.propertyOne.subscribe(function(newValue){
+    alert("Property One changed to " + newValue);
+});
 
-    obj.propertyOne.subscribe(function(newValue){
-        alert("Property One changed to " + newValue);
-    });
-
-    obj.propertyOne("some new value"); //What do you think happens now?
-
-'''
+obj.propertyOne("some new value"); //What do you think happens now?
+```
 
 
 

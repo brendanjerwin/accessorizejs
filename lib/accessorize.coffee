@@ -48,5 +48,8 @@ api.wrap = (target, recurse=true) ->
 
 
 ###
+
+###
 api.mixin_change_notification = (target) ->
-  return undefined
+  target.subscribe = (event_handler) ->
+

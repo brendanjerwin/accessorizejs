@@ -1,14 +1,22 @@
-api = exports ? (window.accessorize = {})
+'use strict'
+
+api = window.accessorize ? (window.accessorize = {})
 
 create_accessor = (property, source_object, target_object) ->
   if typeof source_object[property] == "object"
     source_object[property] = api.wrap source_object[property]
 
+  change_notification_trigger = undefined
   accessor = (val) ->
+    #getter
     return source_object[property] unless val?
-    return source_object[property] = val if val?
 
-  # api.mixin_change_notification accessor.prototype
+    #setter
+    source_object[property] = val
+    # change_notification_trigger(val)
+    return val
+
+  change_notification_trigger = api.mixin_change_notification accessor.prototype
 
   target_object[property] = accessor
 
@@ -51,5 +59,12 @@ api.wrap = (target, recurse=true) ->
 
 ###
 api.mixin_change_notification = (target) ->
+  subscriptions = []
+
   target.subscribe = (event_handler) ->
+    subscriptions.push event_handler
+    return event_handler
+
+  return (new_value, accessor) -> #trigger function
+    handler(new_value, accessor) for handler in subscriptions
 

@@ -1,3 +1,5 @@
+'use strict'
+
 wrap_it = (source) ->
     wrapped : accessorize.wrap source
     source : source
@@ -18,11 +20,11 @@ describe 'wrap function', ->
     topic = test_fodder()
 
     it 'should make an accessor for the simple property', ->
-     expect(topic.wrapped.simple_property).toBeAFunction()
+      expect(topic.wrapped.simple_property).toBeAFunction()
 
     it 'should not touch the method', ->
-     expect(topic.source.hasOwnProperty 'a_method').toBeTruthy()
-     expect(topic.wrapped.hasOwnProperty 'a_method').toBeFalsy()
+      expect(topic.source.hasOwnProperty 'a_method').toBeTruthy()
+      expect(topic.wrapped.hasOwnProperty 'a_method').toBeFalsy()
 
     it 'should make an accessor for the object property', ->
       expect(topic.wrapped.an_object_property).toBeAFunction()
@@ -32,10 +34,10 @@ describe 'wrap function', ->
 
 describe 'sub object wrapping', ->
   describe 'when called with a source having an object property', ->
-      topic = test_fodder().wrapped.an_object_property()
+    topic = test_fodder().wrapped.an_object_property()
 
-      it 'should create an accessor for the simple property', ->
-        expect(topic.sub_simple_property).toBeAFunction()
+    it 'should create an accessor for the simple property', ->
+      expect(topic.sub_simple_property).toBeAFunction()
 
-      it 'should create an accessor that is not on the prototype', ->
-        expect(topic.sub_simple_property).not.toEqual(topic.prototype.sub_simple_property)
+    it 'should create an accessor that is not on the prototype', ->
+      expect(topic.sub_simple_property).not.toEqual(topic.prototype.sub_simple_property)

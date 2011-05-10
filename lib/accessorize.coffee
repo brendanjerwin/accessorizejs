@@ -13,10 +13,10 @@ create_accessor = (property, source_object, target_object) ->
 
     #setter
     source_object[property] = val
-    # change_notification_trigger(val)
+    change_notification_trigger(val, accessor)
     return val
 
-  change_notification_trigger = api.mixin_change_notification accessor.prototype
+  change_notification_trigger = api.mixin_change_notification accessor
 
   target_object[property] = accessor
 

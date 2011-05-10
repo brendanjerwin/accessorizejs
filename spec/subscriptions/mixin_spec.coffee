@@ -1,25 +1,13 @@
-vows = require 'vows'
-assert = require 'assert'
+describe 'subscription mixin', ->
+  target = {}
+  trigger = {}
 
-accessorize = require '../../lib/accessorize.js'
+  beforeEach ->
+    trigger = accessorize.mixin_change_notification target
 
-vows.describe('subscription mixin')
-  .addBatch
-    'when called' :
-      topic : ->
-        target = {}
-        trigger = accessorize.mixin_change_notification target
+  it 'should return a trigger function',  ->
+    expect(trigger).toBeAFunction()
 
-        return {
-          target : target
-          trigger : trigger
-        }
-
-      'it should return a trigger function' : (topic) ->
-        assert.isFunction topic.trigger
-
-      'it should provide a subscribe method' : (topic) ->
-        assert.isFunction topic.target.subscribe
-
-.export(module)
+  it 'should provide a subscribe method', ->
+    expect(target.subscribe).toBeAFunction()
 

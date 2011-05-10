@@ -1,57 +1,59 @@
-vows = require 'vows'
-assert = require 'assert'
-wrap_it = require('./helper.js').wrap_it
+"use strict"
+wrap_it = (source) ->
+    wrapped : accessorize.wrap source
+    source : source
 
-vows.describe('wrap function')
-  .addBatch
-    'when called' :
-      topic : -> wrap_it {}
+topic = {}
 
-      'it should return an object' : (topic) -> assert.isObject topic.wrapped
+describe 'wrap function', ->
+  describe 'when called', ->
+    beforeEach ->
+      topic = wrap_it {}
 
-      'it should set the prototype of the returned object to the target' : (topic) ->
-        assert.strictEqual topic.wrapped.prototype, topic.source
+    it 'should return an object', ->
+      expect(topic.wrapped).toBeAnObject()
 
-    'with a single property on the source' :
-      topic : -> wrap_it
-        single_property : 'foo'
+    it 'should set the prototype of the returned object to the target', ->
+      expect(topic.wrapped.prototype).toEqual(topic.source)
 
-      'it should make an accessor function for the property' : (topic) ->
-        assert.isFunction topic.wrapped.single_property
+    describe 'with a single property on the source', ->
+      beforeEach ->
+        topic = wrap_it
+          single_property : 'foo'
 
-      'it should hide the original property with the accessor function' : (topic) ->
-        assert.notEqual topic.source.single_property, topic.wrapped.single_property
+      it 'should make an accessor function for the property', ->
+        expect(topic.wrapped.single_property).toBeAFunction()
 
-      'the accessor function should return the value' : (topic) ->
-        assert.equal topic.wrapped.single_property(), topic.source.single_property
+      it 'should hide the original property with the accessor function', ->
+        expect(topic.source.single_property).not.toEqual(topic.wrapped.single_property)
 
-    'setting the property via the accessor' :
-      topic : ->
-        result = wrap_it
+      describe 'accessor function', ->
+        it 'should return the value', ->
+          expect(topic.wrapped.single_property()).toEqual(topic.source.single_property)
+
+    describe 'setting the property via the accessor', ->
+      beforeEach ->
+        topic = wrap_it
           a_property : 'bar'
 
-        result.wrapped.a_property('baz')
-        return result
+        topic.wrapped.a_property('baz')
 
-      'should cause the accessor to return the new value' : (topic) ->
-        assert.equal 'baz', topic.wrapped.a_property()
+      it 'should cause the accessor to return the new value', ->
+        expect(topic.wrapped.a_property()).toEqual 'baz'
 
-      'should cause the underlying property to change' : (topic) ->
-        assert.equal 'baz', topic.source.a_property
+      it 'should cause the underlying property to change', ->
+        expect(topic.source.a_property).toEqual 'baz'
 
-    'setting the property on the underlying source object' :
-      topic : ->
-        result = wrap_it
+    describe 'setting the property on the underlying source object', ->
+      beforeEach ->
+        topic= wrap_it
           another_property : 'nothing'
 
-        result.source.another_property = 'hello'
-        return result
+        topic.source.another_property = 'hello'
 
-      'should cause the underlying property to change' : (topic) ->
-        assert.equal 'hello', topic.source.another_property
+      it 'should cause the underlying property to change', ->
+        expect(topic.source.another_property).toEqual 'hello'
 
-      'should cause the accessor to return the new value' : (topic) ->
-        assert.equal 'hello', topic.wrapped.another_property()
-
-.export(module)
+      it 'should cause the accessor to return the new value', ->
+        expect(topic.wrapped.another_property()).toEqual 'hello'
 

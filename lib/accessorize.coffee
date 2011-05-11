@@ -42,12 +42,15 @@ create_accessor = (property, source_object, target_object) ->
     change_notification_trigger(val, accessor)
     return val
 
-  if isArray source_val then accessor = (val) ->
-    return source_object[property][val] if isNumber val
-    return simple_accessor(val)
+  if isArray source_val then accessor = (valOrIndex, indexedVal) ->
+    if isNumber(valOrIndex) and indexedVal?
+        source_object[property][valOrIndex] = indexedVal
+        change_notification_trigger(indexedVal, accessor)
+        return indexedVal
 
-  if not isArray source_val then accessor = simple_accessor
-
+    return source_object[property][valOrIndex] if isNumber valOrIndex
+    return simple_accessor(valOrIndex)
+  else accessor = simple_accessor
 
   change_notification_trigger = api.mixins.change_notification accessor
 

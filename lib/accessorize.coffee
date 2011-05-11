@@ -19,8 +19,14 @@ api = window.accessorize ? (window.accessorize = {})
 api.mixins = {}
 
 
+isArray = Array.isArray || (obj) -> #TODO: delegate to _ if available
+  toString.call(obj) == '[object Array]'
+
+
 create_accessor = (property, source_object, target_object) ->
-  if typeof source_object[property] == "object"
+  source_val = source_object[property]
+
+  if typeof source_val == "object" and not isArray source_val
     source_object[property] = api.wrap source_object[property]
 
   change_notification_trigger = undefined

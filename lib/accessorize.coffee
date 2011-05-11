@@ -19,11 +19,20 @@ api = window.accessorize ? (window.accessorize = {})
 api.mixins = {}
 
 
-isArray = Array.isArray || (obj) -> #TODO: delegate to _ if available
+#A bunch of utilities stollen from underscore. Need to find a way to use underscore if its available
+isArray = Array.isArray || (obj) ->
   toString.call(obj) == '[object Array]'
 
-isNumber = (obj) -> #TODO: delegate to _ if available
+isNumber = (obj) ->
   !!(obj == 0 || (obj && obj.toExponential && obj.toFixed))
+
+nativeBind = Function.prototype.bind
+bind = (func, obj) ->
+    return nativeBind.apply(func, slice.call(arguments, 1)) if (func.bind == nativeBind && nativeBind)
+    args = slice.call(arguments, 2)
+    return ->
+      return func.apply(obj, args.concat(slice.call(arguments)))
+
 
 
 

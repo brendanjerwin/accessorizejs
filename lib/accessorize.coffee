@@ -22,6 +22,10 @@ api.mixins = {}
 isArray = Array.isArray || (obj) -> #TODO: delegate to _ if available
   toString.call(obj) == '[object Array]'
 
+isNumber = (obj) -> #TODO: delegate to _ if available
+  !!(obj == 0 || (obj && obj.toExponential && obj.toFixed))
+
+
 
 create_accessor = (property, source_object, target_object) ->
   source_val = source_object[property]
@@ -30,12 +34,20 @@ create_accessor = (property, source_object, target_object) ->
     source_object[property] = api.wrap source_object[property]
 
   change_notification_trigger = undefined
-  accessor = (val) ->
+
+  simple_accessor = (val) ->
     return source_object[property] unless val?
 
     source_object[property] = val
     change_notification_trigger(val, accessor)
     return val
+
+  if isArray source_val then accessor = (val) ->
+    return source_object[property][val] if isNumber val
+    return simple_accessor(val)
+
+  if not isArray source_val then accessor = simple_accessor
+
 
   change_notification_trigger = api.mixins.change_notification accessor
 

@@ -1,6 +1,23 @@
+###
+_Add observable accessors to any object._
+
+`accessorize.js` makes it easy to convert plain javascript 'properties'
+into fancy-ass-observable-accessor-methods!
+
+See [accessorizejs.com](http://accessorizejs.com) for more info and license information.
+
+###
 'use strict'
 
+
+###
+Find a reasonable place to hang our api. Fall back to a global `accessorize` object if we have to.
+
+  **TODO:** Need to detect an amd compatible `define` function and use it if we can.
+###
 api = window.accessorize ? (window.accessorize = {})
+api.mixins = {}
+
 
 create_accessor = (property, source_object, target_object) ->
   if typeof source_object[property] == "object"
@@ -8,15 +25,13 @@ create_accessor = (property, source_object, target_object) ->
 
   change_notification_trigger = undefined
   accessor = (val) ->
-    #getter
     return source_object[property] unless val?
 
-    #setter
     source_object[property] = val
     change_notification_trigger(val, accessor)
     return val
 
-  change_notification_trigger = api.mixin_change_notification accessor
+  change_notification_trigger = api.mixins.change_notification accessor
 
   target_object[property] = accessor
 
@@ -26,7 +41,7 @@ Takes a `target` object and wrap it in a new object with
 accessor functions for all of the target object's properties.
 
 Accessor functions and the wrapper object are  both extended
-with `mixin_change_notification`; enabling observable behavior
+with `mixins.change_notification`; enabling observable behavior
 at both the individual property level and the object level.
 
 (As a point of interest: the first subscriber to each accessor's
@@ -58,13 +73,12 @@ api.wrap = (target, recurse=true) ->
 ###
 
 ###
-api.mixin_change_notification = (target) ->
+api.mixins.change_notification = (target) ->
   subscriptions = []
 
   target.subscribe = (event_handler) ->
     subscriptions.push event_handler
     return event_handler
 
-  return (new_value, accessor) -> #trigger function
+  return (new_value, accessor) ->
     handler(new_value, accessor) for handler in subscriptions
-

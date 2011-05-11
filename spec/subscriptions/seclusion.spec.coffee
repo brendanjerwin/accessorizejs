@@ -14,10 +14,10 @@ describe 'subscription seclusion', ->
 
   beforeEach ->
     target1 = {}
-    trigger_for_1 = accessorize.mixin_change_notification target1
+    trigger_for_1 = accessorize.mixins.change_notification target1
 
     target2 = {}
-    trigger_for_2 =  accessorize.mixin_change_notification target2
+    trigger_for_2 =  accessorize.mixins.change_notification target2
 
     subscriber_for_1 = spyOn(callbacks, 'subscriber_for_1')
     subscriber_for_2 = spyOn(callbacks, 'subscriber_for_2')

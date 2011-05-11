@@ -3,7 +3,7 @@ describe 'subscription mixin', ->
   trigger = {}
 
   beforeEach ->
-    trigger = accessorize.mixin_change_notification target
+    trigger = accessorize.mixins.change_notification target
 
   it 'should return a trigger function',  ->
     expect(trigger).toBeAFunction()

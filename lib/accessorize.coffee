@@ -26,15 +26,32 @@ isArray = Array.isArray || (obj) ->
 isNumber = (obj) ->
   !!(obj == 0 || (obj && obj.toExponential && obj.toFixed))
 
-nativeBind = Function.prototype.bind
+slice = Array.prototype.slice
+
 bind = (func, obj) ->
-    return nativeBind.apply(func, slice.call(arguments, 1)) if (func.bind == nativeBind && nativeBind)
-    args = slice.call(arguments, 2)
-    return ->
-      return func.apply(obj, args.concat(slice.call(arguments)))
+  nativeBind = Function.prototype.bind
+  return nativeBind.apply(func, slice.call(arguments, 1)) if (func.bind == nativeBind && nativeBind)
+  args = slice.call(arguments, 2)
+  return ->
+    return func.apply(obj, args.concat(slice.call(arguments)))
 
 
+promote_array_methods = (source_array, target_accessor, change_notification_trigger) ->
+    change_causing_methods = ['pop','push','reverse','shift','sort','splice','unshift']
+    other_methods = ['concat', 'join', 'slice', 'indexOf', 'lastIndexOf']
 
+    promote = (method) ->
+      target_accessor[method] = () ->
+        ret_val = source_array[method].apply(source_array, slice.call(arguments))
+        change_notification_trigger(target_accessor(), target_accessor)
+        return ret_val
+
+    promote method for method in change_causing_methods
+
+    promote = (method) ->
+      target_accessor[method] = bind(source_array[method], source_array)
+
+    promote method for method in other_methods
 
 create_accessor = (property, source_object, target_object) ->
   source_val = source_object[property]
@@ -51,17 +68,20 @@ create_accessor = (property, source_object, target_object) ->
     change_notification_trigger(val, accessor)
     return val
 
-  if isArray source_val then accessor = (valOrIndex, indexedVal) ->
-    if isNumber(valOrIndex) and indexedVal?
-        source_object[property][valOrIndex] = indexedVal
-        change_notification_trigger(indexedVal, accessor)
-        return indexedVal
+  if isArray source_val
 
-    return source_object[property][valOrIndex] if isNumber valOrIndex
-    return simple_accessor(valOrIndex)
+    accessor = (valOrIndex, indexedVal) ->
+      if isNumber(valOrIndex) and indexedVal?
+          source_object[property][valOrIndex] = indexedVal
+          change_notification_trigger(indexedVal, accessor)
+          return indexedVal
+
+      return source_object[property][valOrIndex] if isNumber valOrIndex
+      return simple_accessor(valOrIndex)
   else accessor = simple_accessor
 
   change_notification_trigger = api.mixins.change_notification accessor
+  promote_array_methods source_val, accessor, change_notification_trigger if isArray source_val
 
   target_object[property] = accessor
 

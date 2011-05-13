@@ -1,11 +1,14 @@
 accessorize.js
 ==============
-_Add observable accessors to any object._
-
-***ALERT:*** Not quite working. I'll remove this notice once it is.
+_Add fancy-ass-observable-hyper-helpful accessors to any object._
 
 `accessorize.js` makes it easy to convert plain javascript 'properties'
-into fancy-ass-observable-accessor-methods!
+into fancy-ass-observable-accessor-methods! Simply call `.wrap()` with
+your plain-old-javascript-object and get back a super-charged wrapped
+version.
+
+Accessors
+---------
 
 Accessorized accessor methods will be familiar to anyone who has used
 JQuery:
@@ -17,10 +20,14 @@ JQuery:
 
 _But wait! There's more!_
 
+Change Notifications (AKA: Observables)
+---------------------------------------
+
 In addition to the lovely accessor symantics, you'll also get change
 notification too!
 
 ```javascript
+
 var obj = accessorize.wrap({
     propertyOne : "value",
     propertyTwo : "another value"
@@ -31,9 +38,57 @@ obj.propertyOne.subscribe(function(newValue){
 });
 
 obj.propertyOne("some new value"); //What do you think happens now?
+
 ```
 
+Array Accessors
+---------------
 
+The array accessors have a couple of special powers themselves.
+
+In addition to the normal getter/setter behavior of the regular
+accessors, array accessors offer an indexing variations:
+
+```javascript
+
+var obj = accessorize.wrap({
+    arrayProperty = ["hello", "world"]
+});
+
+//indexing getter
+var item = obj.arrayProperty(1);
+alert(item); // alerts: "world"
+
+//indexing setter
+obj.arrayProperty(0,"goodbye");
+alert(obj.arrayProperty(0)); // alerts: "goodbye"
+
+```
+
+Setter Chaining
+---------------
+
+Setter calls can be chained, enableing nicely formatted chunks of code:
+
+```javascript
+
+var person = accessorize.wrap({
+    addresses = [],
+    firstName = "",
+    lastName = "",
+    favoriteColor = ""
+});
+
+//Here it is, beuatiful assignement blocks!
+person
+    .firstName("Joe")
+    .lastName("Blow")
+    .addresses(["123 Any Street", "58 Ave. Q"])
+    .favoriteColor("Red");
+
+//Wasn't that nice?
+
+```
 
 LICENSE
 =======

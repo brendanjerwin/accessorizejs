@@ -23,7 +23,7 @@ _But wait! There's more!_
 Change Notifications (AKA: Observables)
 ---------------------------------------
 
-In addition to the lovely accessor symantics, you'll also get change
+In addition to the lovely accessor semantics, you'll also get change
 notification too!
 
 ```javascript
@@ -79,7 +79,7 @@ var person = accessorize.wrap({
     favoriteColor = ""
 });
 
-//Here it is, beuatiful assignement blocks!
+//Here it is, beautiful assignement blocks!
 person
     .firstName("Joe")
     .lastName("Blow")

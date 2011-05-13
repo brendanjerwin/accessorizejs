@@ -79,7 +79,7 @@ var person = accessorize.wrap({
     favoriteColor = ""
 });
 
-//Here it is, beautiful assignement blocks!
+//Here it is, beautiful assignment blocks!
 person
     .firstName("Joe")
     .lastName("Blow")

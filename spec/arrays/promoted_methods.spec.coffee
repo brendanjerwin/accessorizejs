@@ -25,7 +25,6 @@ define ['src/accessorize.js'], (accessorize) ->
 
       it 'should promote the methods from the array', ->
         expect_promoted = (method) ->
-          console.log method
           expect(obj.arrayProperty[method]).toBeAFunction('called ' + method)
 
         expect_promoted method for method in ['pop','push','reverse','shift','sort','splice','unshift'].concat(['concat', 'join', 'slice', 'indexOf', 'lastIndexOf'])

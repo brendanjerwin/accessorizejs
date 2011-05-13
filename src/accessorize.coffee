@@ -7,7 +7,7 @@ into fancy-ass-observable-accessor-methods!
 See [accessorizejs.com](http://accessorizejs.com) for more info and license information.
 
 ###
-define ->
+define ["lib/underscore"], (_) ->
   'use strict'
 
 

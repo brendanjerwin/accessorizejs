@@ -67,7 +67,7 @@ define ["lib/underscore"], (_) ->
 
       source_object[property] = val
       change_notification_trigger(val, accessor)
-      return val
+      return target_object
 
     if isArray source_val
 
@@ -75,7 +75,7 @@ define ["lib/underscore"], (_) ->
         if isNumber(valOrIndex) and indexedVal?
             source_object[property][valOrIndex] = indexedVal
             change_notification_trigger(indexedVal, accessor)
-            return indexedVal
+            return target_object
 
         return source_object[property][valOrIndex] if isNumber valOrIndex
         return simple_accessor(valOrIndex)

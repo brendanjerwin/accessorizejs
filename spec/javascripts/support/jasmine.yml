@@ -1,3 +1,5 @@
+require_js: lib/require.js
+
 # src_files
 #
 # Return an array of filepaths relative to src_dir to include before jasmine specs.
@@ -11,7 +13,7 @@
 #   - dist/**/*.js
 #
 src_files:
-    - lib/**/*.js
+    - src/**/*.js
 
 # stylesheets
 #

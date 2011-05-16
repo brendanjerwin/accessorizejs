@@ -57,7 +57,7 @@ define ["lib/underscore"], (_) ->
   create_accessor = (property, source_object, target_object) ->
     source_val = source_object[property]
 
-    if typeof source_val == "object" and not isArray source_val
+    if source_val? and typeof source_val == "object" and not isArray source_val
       source_object[property] = api.wrap source_object[property]
 
     change_notification_trigger = undefined

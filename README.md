@@ -68,7 +68,7 @@ alert(obj.arrayProperty(0)); // alerts: "goodbye"
 Setter Chaining
 ---------------
 
-Setter calls can be chained, enableing nicely formatted chunks of code:
+Setter calls can be chained, enabling nicely formatted chunks of code:
 
 ```javascript
 

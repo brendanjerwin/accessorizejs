@@ -1,4 +1,4 @@
-define ['src/accessorize.js'], (accessorize) ->
+define ['src/accessorize', 'spec/helpers/SpecHelper'], (accessorize) ->
   'use strict'
 
   wrap_it = (source) ->

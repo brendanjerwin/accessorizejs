@@ -1,4 +1,5 @@
-require_js: lib/require.js
+require_js:
+    - lib/require.js
 
 # src_files
 #

@@ -1,4 +1,4 @@
-define ['src/accessorize.js'], (accessorize) ->
+define ['src/accessorize.js', 'spec/helpers/SpecHelper'], (accessorize) ->
   describe 'basic shape of the api', ->
 
     it 'should exist', ->

@@ -90,6 +90,26 @@ person
 
 ```
 
+Underscore.js Integration
+-------------------------
+
+Underscore integration opens up a whole universe of helpful
+functionality on your data. See: [underscore.js](http://documentcloud.github.com/underscore/)
+
+If underscore is passed into an accessor it will return an underscore wrapped instance of the property value:
+
+`obj.arrayProperty(_).pluck('blah')`
+
+If underscore.string is loaded:
+
+`obj.stringProperty(_).chain().trim().capitalize().value()`
+
+Also, if the accessor is an Array accessor, you can retrieve an
+underscore wrapped instance at a given index:
+
+`obj.arrayProperty(1,_).trim()`
+
+
 LICENSE
 =======
 This software is licensed under the "MIT License":

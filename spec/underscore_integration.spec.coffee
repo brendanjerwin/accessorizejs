@@ -21,10 +21,24 @@ define ['src/accessorize', 'lib/underscore'], (accessorize, _) ->
     describe "return value", ->
       ret_val = undefined
 
+      it_should_wrap = ->
+        it 'should return an _ wrapped object', ->
+          expect(ret_val._wrapped).toBeDefined()
+
       describe "simple accessor", ->
         beforeEach ->
           ret_val = obj.singleProperty(_)
 
-        xit 'should return an _ wrapped object', ->
-          expect(ret_val.prototype).toBe(_.prototype)
+        it_should_wrap()
 
+      describe 'simple array accessor', ->
+        beforeEach ->
+          ret_val = obj.arrayProperty(_)
+
+        it_should_wrap()
+
+      describe 'indexing array accessor', ->
+        beforeEach ->
+          ret_val = obj.arrayProperty(0,_)
+
+        it_should_wrap()

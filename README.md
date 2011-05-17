@@ -47,7 +47,8 @@ Array Accessors
 The array accessors have a couple of special powers themselves.
 
 In addition to the normal getter/setter behavior of the regular
-accessors, array accessors offer an indexing variations:
+accessors, array accessors offer indexing variations of the getters and
+setters:
 
 ```javascript
 
@@ -64,6 +65,60 @@ obj.arrayProperty(0,"goodbye");
 alert(obj.arrayProperty(0)); // alerts: "goodbye"
 
 ```
+
+Finally, array accessors surface the standard array methods directly on
+the accessor object itself. This lets array accessors be used a lot like
+an array would be in many cases. It also provides change notification if
+any of the mutator methods are called.
+
+**A not-really-all-that-exciting example:**
+```javascript
+
+//You can do this:
+
+var combined = obj.arrayProperty.concat([1,2,3]);
+
+//instead of this:
+
+var combined = obj.arrayProperty().concat([1,2,3]);
+
+```
+
+**A more exciting example:**
+_The mutator methods are more interesting, since we get change
+notifications when they are called._
+
+```javascript
+
+var obj = accessorize.wrap({
+    arrayProperty = ["hello", "world"]
+});
+
+obj.arrayProperty.subscribe(function(){ alert("Changed!"); });
+
+obj.arrayProperty.sort() // alerts: "Changed!"
+
+```
+
+The following [methods](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array) are promoted to the accessor:
+
+**Causes Change Notification:**
+
+  * pop
+  * push
+  * reverse
+  * shift
+  * sort
+  * splice
+  * unshift
+
+**No Change to Property Value:**
+
+  * concat
+  * join
+  * slice
+  * indexOf
+  * lastIndexOf
 
 Setter Chaining
 ---------------

@@ -72,6 +72,7 @@ an array would be in many cases. It also provides change notification if
 any of the mutator methods are called.
 
 **A not-really-all-that-exciting example:**
+
 ```javascript
 
 //You can do this:
@@ -85,6 +86,7 @@ var combined = obj.arrayProperty().concat([1,2,3]);
 ```
 
 **A more exciting example:**
+
 _The mutator methods are more interesting, since we get change
 notifications when they are called._
 

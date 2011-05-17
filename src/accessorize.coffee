@@ -88,6 +88,7 @@ define ["lib/underscore"], (_) ->
     change_notification_trigger = api.mixins.change_notification accessor
     promote_array_methods source_val, accessor, change_notification_trigger if isArray source_val
 
+    accessor.__accessorized_accessor = true
     target_object[property] = accessor
 
 
@@ -122,8 +123,15 @@ define ["lib/underscore"], (_) ->
     create_accessor(property, target, wrapped) for own property of target when is_a_wrappable property
 
     wrapped.prototype = target
+    wrapped.__accessorized_object = yes
     return wrapped
 
+
+  api.isAccessorized = (obj) ->
+    return no if not obj?
+    return {kind : 'object' } if obj.__accessorized_object
+    return {kind : 'accessor' } if obj.__accessorized_accessor
+    return no
 
   ###
 

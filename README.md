@@ -167,6 +167,35 @@ underscore wrapped instance at a given index:
 `obj.arrayProperty(1,_).trim()`
 
 
+Identify Accessorized Objects
+-----------------------------
+
+Accessorized provides an `isAccessorized()` method so that you can
+identify which of your objects have been accessorized.
+
+```javascript
+
+var source = {
+    propertyOne : "value",
+    propertyTwo : "another value"
+}
+
+if (accessorize.isAccessorized(source)) {
+    alert("This doesn't happen!");
+}
+
+var obj = accessorize.wrap(source);
+
+if (accessorize.isAccessorized(obj)) {
+    alert("But this does!");
+}
+
+```
+
+If an object _is_ accessorized, `isAccessorized()` returns an object
+with a `kind` property: `'object'` if the accessorized object is a
+wrapped object, `'accessor'` if it is an accessor.
+
 LICENSE
 =======
 This software is licensed under the "MIT License":

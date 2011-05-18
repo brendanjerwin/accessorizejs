@@ -2,7 +2,7 @@ define ['src/accessorize', 'spec/helpers/SpecHelper'], (accessorize) ->
   'use strict'
 
   wrap_it = (source) ->
-      wrapped : accessorize.wrap source
+      wrapped : accessorize source
       source : source
 
   test_fodder = ->

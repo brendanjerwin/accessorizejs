@@ -6,7 +6,7 @@ define ['src/accessorize.js'], (accessorize) ->
 
     describe "Indexing Getter", ->
       beforeEach ->
-        obj = accessorize.wrap
+        obj = accessorize
           arrayProperty : the_array
 
       describe 'passing a number into the accessor', ->

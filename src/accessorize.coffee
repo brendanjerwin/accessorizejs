@@ -10,15 +10,7 @@ See [accessorizejs.com](http://accessorizejs.com) for more info and license info
 define ["lib/underscore"], (_) ->
   'use strict'
 
-
-  ###
-  Find a reasonable place to hang our api. Fall back to a global `accessorize` object if we have to.
-
-    **TODO:** Need to detect an amd compatible `define` function and use it if we can.
-  ###
-  api = {}
-  api.mixins = {}
-
+  api = undefined
 
   #A bunch of utilities stollen from underscore. Need to find a way to use underscore if its available
   isArray = Array.isArray || (obj) ->
@@ -58,7 +50,7 @@ define ["lib/underscore"], (_) ->
     source_val = source_object[property]
 
     if source_val? and typeof source_val == "object" and not isArray source_val
-      source_object[property] = api.wrap source_object[property]
+      source_object[property] = api(source_object[property])
 
     change_notification_trigger = undefined
 
@@ -114,7 +106,7 @@ define ["lib/underscore"], (_) ->
     TODO: Make the recurse option turn-off-able
 
   ###
-  api.wrap = (target, recurse=true) ->
+  api = (target, recurse=true) ->
     wrapped = {}
 
     is_a_wrappable = (property) ->
@@ -133,9 +125,8 @@ define ["lib/underscore"], (_) ->
     return {kind : 'accessor' } if obj.__accessorized_accessor
     return no
 
-  ###
 
-  ###
+  api.mixins = {}
   api.mixins.change_notification = (target) ->
     subscriptions = []
 

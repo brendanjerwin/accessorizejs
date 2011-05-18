@@ -7,7 +7,7 @@ define ['src/accessorize', 'spec/helpers/SpecHelper'], (accessorize) ->
   describe 'wrapping an object having a null-valued property', ->
 
     beforeEach ->
-      obj = accessorize.wrap
+      obj = accessorize
         nullProperty : null
         undefinedProperty : undefined
 

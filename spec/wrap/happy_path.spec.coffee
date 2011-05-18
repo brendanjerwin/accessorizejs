@@ -1,7 +1,7 @@
 define ['src/accessorize.js'], (accessorize) ->
   "use strict"
   wrap_it = (source) ->
-      wrapped : accessorize.wrap source
+      wrapped : accessorize source
       source : source
 
   topic = {}

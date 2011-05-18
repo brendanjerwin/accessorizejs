@@ -3,9 +3,12 @@ accessorize.js
 _Add fancy-ass-observable-hyper-helpful accessors to any object._
 
 `accessorize.js` makes it easy to convert plain javascript 'properties'
-into fancy-ass-observable-accessor-methods! Simply call `.wrap()` with
+into fancy-ass-observable-accessor-methods! Simply call `accessorize()` with
 your plain-old-javascript-object and get back a super-charged wrapped
 version.
+
+_Unimportant Note_: Actually you could name `accessorize` anything you want since it's packaged as
+a [CommonJS AMD Module](http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition)
 
 Accessors
 ---------
@@ -28,7 +31,7 @@ notification too!
 
 ```javascript
 
-var obj = accessorize.wrap({
+var obj = accessorize({
     propertyOne : "value",
     propertyTwo : "another value"
 });
@@ -52,7 +55,7 @@ setters:
 
 ```javascript
 
-var obj = accessorize.wrap({
+var obj = accessorize({
     arrayProperty = ["hello", "world"]
 });
 
@@ -92,7 +95,7 @@ notifications when they are called._
 
 ```javascript
 
-var obj = accessorize.wrap({
+var obj = accessorize({
     arrayProperty = ["hello", "world"]
 });
 
@@ -129,7 +132,7 @@ Setter calls can be chained, enabling nicely formatted chunks of code:
 
 ```javascript
 
-var person = accessorize.wrap({
+var person = accessorize({
     addresses = [],
     firstName = "",
     lastName = "",
@@ -184,7 +187,7 @@ if (accessorize.isAccessorized(source)) {
     alert("This doesn't happen!");
 }
 
-var obj = accessorize.wrap(source);
+var obj = accessorize(source);
 
 if (accessorize.isAccessorized(obj)) {
     alert("But this does!");

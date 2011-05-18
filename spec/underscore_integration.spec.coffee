@@ -5,7 +5,7 @@ define ['src/accessorize', 'lib/underscore'], (accessorize, _) ->
 
   describe 'underscore integration', ->
     beforeEach ->
-      obj = accessorize.wrap
+      obj = accessorize
         singleProperty : "hello"
         arrayProperty : [ "hello", "world" ]
 

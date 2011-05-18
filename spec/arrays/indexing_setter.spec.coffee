@@ -4,7 +4,7 @@ define ['src/accessorize.js'], (accessorize) ->
 
     describe "Indexing Setter", ->
       beforeEach ->
-        obj = accessorize.wrap
+        obj = accessorize
           arrayProperty : ["hello", "planet"]
 
       it 'should allow the value to be set at an index', ->

@@ -3,7 +3,7 @@ define ["src/accessorize"], (acc) ->
     obj = undefined
 
     beforeEach ->
-      obj = acc.wrap
+      obj = acc
         property_one : ""
         property_two : []
         property_three : ""

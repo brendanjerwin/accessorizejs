@@ -5,7 +5,7 @@ define ['src/accessorize.js'], (accessorize) ->
 
     describe "Simple Getter", ->
       beforeEach ->
-        obj = accessorize.wrap
+        obj = accessorize
           arrayProperty : the_array
 
       it 'should return the array', ->

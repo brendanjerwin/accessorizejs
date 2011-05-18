@@ -5,7 +5,7 @@ define ['src/accessorize'], (accessorize) ->
     obj = undefined
 
     beforeEach ->
-      obj = accessorize.wrap
+      obj = accessorize
         simpleProperty : 'hello'
         arrayProperty : ['hello', 'world']
 

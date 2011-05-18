@@ -4,5 +4,5 @@ define ['src/accessorize.js', 'spec/helpers/SpecHelper'], (accessorize) ->
     it 'should exist', ->
       expect(accessorize).toBeDefined()
 
-    it 'should have a wrap function', ->
-      expect(accessorize.wrap).toBeAFunction()
+    it 'should be a function', ->
+      expect(accessorize).toBeAFunction()

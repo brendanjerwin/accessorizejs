@@ -5,7 +5,7 @@ define ['src/accessorize.js'], (accessorize) ->
 
     describe "Simple Setter", ->
       beforeEach ->
-        obj = accessorize.wrap
+        obj = accessorize
           arrayProperty : []
 
       it 'should allow the value to be set', ->

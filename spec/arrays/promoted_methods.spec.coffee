@@ -17,7 +17,7 @@ define ['src/accessorize.js'], (accessorize) ->
       beforeEach ->
         the_array = ["hello","world","I'm","here"]
 
-        obj = accessorize.wrap
+        obj = accessorize
           arrayProperty : the_array
 
         subscriber = spyOn(callbacks, 'subscriber')

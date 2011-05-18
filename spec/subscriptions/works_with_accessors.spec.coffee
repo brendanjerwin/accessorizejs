@@ -11,7 +11,7 @@ define ['src/accessorize.js'], (accessorize) ->
       obj =
         property_one : "foo"
 
-      obj = accessorize.wrap obj
+      obj = accessorize obj
 
       subscriber = spyOn(callbacks, 'subscriber')
 

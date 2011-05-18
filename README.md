@@ -133,10 +133,10 @@ Setter calls can be chained, enabling nicely formatted chunks of code:
 ```javascript
 
 var person = accessorize({
-    addresses = [],
-    firstName = "",
-    lastName = "",
-    favoriteColor = ""
+    addresses : [],
+    firstName : "",
+    lastName : "",
+    favoriteColor : ""
 });
 
 //Here it is, beautiful assignment blocks!
@@ -198,6 +198,26 @@ if (accessorize.isAccessorized(obj)) {
 If an object _is_ accessorized, `isAccessorized()` returns an object
 with a `kind` property: `'object'` if the accessorized object is a
 wrapped object, `'accessor'` if it is an accessor.
+
+
+JSON Serialization
+------------------
+
+Care has been taken, and `toJSON()` methods written, to ensure that your
+accessorized objects will serialize to JSON like you'd expect.
+
+```javascript
+
+var person = accessorize({
+    addresses : ["123 any st.", "345 another ave."],
+    firstName : "Joe",
+    lastName : "Blow"
+});
+
+console.log(JSON.stringify(person))
+//{"addresses":["123 any st.","345 another ave."],"firstName":"Joe","lastName":"Blow"}
+
+```
 
 LICENSE
 =======

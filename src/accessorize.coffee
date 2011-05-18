@@ -77,10 +77,13 @@ define ["lib/underscore"], (_) ->
         return simple_accessor(valOrIndex)
     else accessor = simple_accessor
 
+    accessor.__accessorized_accessor = true
+
     change_notification_trigger = api.mixins.change_notification accessor
     promote_array_methods source_val, accessor, change_notification_trigger if isArray source_val
 
-    accessor.__accessorized_accessor = true
+    api.mixins.json_serialization accessor, -> source_object[property]
+
     target_object[property] = accessor
 
 
@@ -116,6 +119,9 @@ define ["lib/underscore"], (_) ->
 
     wrapped.prototype = target
     wrapped.__accessorized_object = yes
+
+    api.mixins.json_serialization wrapped
+
     return wrapped
 
 
@@ -136,6 +142,23 @@ define ["lib/underscore"], (_) ->
 
     return (new_value, accessor) ->
       handler(new_value, accessor) for handler in subscriptions
+
+  is_accessor = (property) ->
+    sniff = api.isAccessorized property
+    return false unless sniff
+    return sniff.kind is 'accessor'
+
+  api.mixins.json_serialization = (target, accessor_backer) ->
+    sniff = api.isAccessorized target
+    throw new Error 'can only mix-in on accessorized objects' unless sniff
+
+    if sniff.kind is 'object' then target.toJSON = ->
+      target.prototype
+
+    if sniff.kind is 'accessor' then target.toJSON = ->
+      val = accessor_backer()
+      return val.toJSON() if val.toJSON?
+      return val
 
   #export the api
   return api

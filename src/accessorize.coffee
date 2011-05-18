@@ -7,12 +7,13 @@ into fancy-ass-observable-accessor-methods!
 See [accessorizejs.com](http://accessorizejs.com) for more info and license information.
 
 ###
-define ["lib/underscore"], (_) ->
+UNDERSCORE_PATH = "lib/underscore"
+define [UNDERSCORE_PATH], (_) ->
   'use strict'
-
 
   #Check runtime requirements
   throw new Error('JSON is required for accessorize to run. You can get a polyfill here: https://github.com/douglascrockford/JSON-js/blob/master/json2.js') unless JSON?
+  throw new Error("Did not get an instance of underscore (_) loaded from #{UNDERSCORE_PATH}. The underscore module probably didn't `return` the object.") unless _?
 
   api = undefined
 
@@ -91,28 +92,6 @@ define ["lib/underscore"], (_) ->
     target_object[property] = accessor
 
 
-  ###
-  Takes a `target` object and wrap it in a new object with
-  accessor functions for all of the target object's properties.
-
-  Accessor functions and the wrapper object are  both extended
-  with `mixins.change_notification`; enabling observable behavior
-  at both the individual property level and the object level.
-
-  (As a point of interest: the first subscriber to each accessor's
-  change notification is the parent wrapper object itself.)
-
-  Wrapping an object will not touch its methods, but since the
-  original object is set to the wrapper's prototype, they are
-  still accessible.
-
-  If a property's _value_ is an object itself, then the value
-  object is also wrapped. This behavior can be disabled by
-  passing `false` for the second, `recurse`, parameter.
-
-    TODO: Make the recurse option turn-off-able
-
-  ###
   api = (target, recurse=true) ->
     wrapped = {}
 
@@ -163,6 +142,7 @@ define ["lib/underscore"], (_) ->
       val = accessor_backer()
       return val.toJSON() if val.toJSON?
       return val
+
 
   #export the api
   return api

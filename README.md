@@ -219,6 +219,18 @@ console.log(JSON.stringify(person))
 
 ```
 
+
+"Why Accessor Methods? I thought ES5 has Properties already."
+-------------------------------------------------------------
+
+Two main reasons:
+
+  1. Accessorize has what devs need, now, even in non-ES5 environments.
+  2. The "JQuery-Style" Accessor Methods not only provide nice
+     getter/setter syntax, but they also provide a nice place to hange
+     meta-data and functions. Things like our `subscribe()` method have a
+     nicer home than they could otherwise.
+
 LICENSE
 =======
 This software is licensed under the "MIT License":

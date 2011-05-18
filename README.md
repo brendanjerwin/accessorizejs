@@ -173,7 +173,7 @@ underscore wrapped instance at a given index:
 Identify Accessorized Objects
 -----------------------------
 
-Accessorized provides an `isAccessorized()` method so that you can
+`isAccessorized()` is available so that you can
 identify which of your objects have been accessorized.
 
 ```javascript

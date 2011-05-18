@@ -10,6 +10,10 @@ See [accessorizejs.com](http://accessorizejs.com) for more info and license info
 define ["lib/underscore"], (_) ->
   'use strict'
 
+
+  #Check runtime requirements
+  throw new Error('JSON is required for accessorize to run. You can get a polyfill here: https://github.com/douglascrockford/JSON-js/blob/master/json2.js') unless JSON?
+
   api = undefined
 
   #A bunch of utilities stollen from underscore. Need to find a way to use underscore if its available

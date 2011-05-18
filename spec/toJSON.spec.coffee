@@ -32,8 +32,6 @@ define ['src/accessorize'], (accessorize) ->
         expect(-> JSON.parse(ret_val)).not.toThrow()
 
       it 'should return the serialized object', ->
-        console.log ret_val
-        console.log JSON.parse(ret_val)
         expect(ret_val).toBe('{"simpleProperty":"string value","arrayProperty":["one","two"],"objectProperty":{"simpleProperty":"another value"}}')
 
     describe 'accessor level method', ->

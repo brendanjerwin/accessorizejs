@@ -104,6 +104,7 @@ define [UNDERSCORE_PATH], (_) ->
     wrapped.__accessorized_object = yes
 
     api.mixins.json_serialization wrapped
+    api.mixins.add_accessor wrapped
 
     return wrapped
 
@@ -116,6 +117,11 @@ define [UNDERSCORE_PATH], (_) ->
 
 
   api.mixins = {}
+
+  api.mixins.add_accessor = (target) ->
+    target.addAccessor = (name) ->
+      create_accessor name, target.prototype, target
+
   api.mixins.change_notification = (target) ->
     subscriptions = []
 

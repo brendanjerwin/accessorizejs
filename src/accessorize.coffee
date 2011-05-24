@@ -92,7 +92,7 @@ define [UNDERSCORE_PATH], (_) ->
 
     wrapped.__accessorized_object = yes
 
-    api.mixins.json_serialization wrapped, -> target
+    api.mixins.json_serialization wrapped, target
     api.mixins.add_accessor wrapped, target
 
     return wrapped
@@ -129,10 +129,11 @@ define [UNDERSCORE_PATH], (_) ->
     return sniff.kind is 'accessor'
 
   api.mixins.json_serialization = (target, backer) ->
-     throw new Error 'can only mix-in on accessorized objects' unless api.isAccessorized target
+    throw new Error 'can only mix-in on accessorized objects' unless api.isAccessorized target
 
-     target.toJSON = ->
-      val = backer()
+    target.toJSON = ->
+      #we allow a function here just in case the property backer wasn't an object, this lets us always dereference the property just in time
+      val = if _.isFunction backer then backer() else backer
       return val.toJSON() if val.toJSON?
       return val
 

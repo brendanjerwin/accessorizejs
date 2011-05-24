@@ -15,7 +15,7 @@ define ['src/accessorize.js'], (accessorize) ->
         expect(topic.wrapped).toBeAnObject()
 
       it 'should set the prototype of the returned object to the target', ->
-        expect(topic.wrapped.prototype).toEqual(topic.source)
+        expect(topic.wrapped.toJSON()).toEqual(topic.source)
 
       describe 'with a single property on the source', ->
         beforeEach ->

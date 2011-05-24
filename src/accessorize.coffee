@@ -17,22 +17,12 @@ define [UNDERSCORE_PATH], (_) ->
 
   api = undefined
 
-  #A bunch of utilities stollen from underscore. Need to find a way to use underscore if its available
-  isArray = Array.isArray || (obj) ->
-    toString.call(obj) == '[object Array]'
-
-  isNumber = (obj) ->
-    !!(obj == 0 || (obj && obj.toExponential && obj.toFixed))
-
   slice = Array.prototype.slice
 
-  bind = (func, obj) ->
-    nativeBind = Function.prototype.bind
-    return nativeBind.apply(func, slice.call(arguments, 1)) if (func.bind == nativeBind && nativeBind)
-    args = slice.call(arguments, 2)
-    return ->
-      return func.apply(obj, args.concat(slice.call(arguments)))
-
+  newFrom = (prototype) ->
+    f = ->
+    f.prototype = prototype
+    return new f
 
   promote_array_methods = (source_array, target_accessor, change_notification_trigger) ->
       change_causing_methods = ['pop','push','reverse','shift','sort','splice','unshift']
@@ -47,14 +37,14 @@ define [UNDERSCORE_PATH], (_) ->
       promote method for method in change_causing_methods
 
       promote = (method) ->
-        target_accessor[method] = bind(source_array[method], source_array)
+        target_accessor[method] = _.bind(source_array[method], source_array)
 
       promote method for method in other_methods
 
   create_accessor = (property, source_object, target_object) ->
     source_val = source_object[property]
 
-    if source_val? and typeof source_val == "object" and not isArray source_val
+    if source_val? and typeof source_val == "object" and not _.isArray source_val
       source_object[property] = api(source_object[property])
 
     change_notification_trigger = undefined
@@ -68,24 +58,24 @@ define [UNDERSCORE_PATH], (_) ->
       change_notification_trigger(val, accessor)
       return target_object
 
-    if isArray source_val
+    if _.isArray source_val
 
       accessor = (valOrIndex, indexedVal) ->
-        if isNumber(valOrIndex) and indexedVal?
+        if _.isNumber(valOrIndex) and indexedVal?
           return _(source_object[property][valOrIndex]) if indexedVal == _
 
           source_object[property][valOrIndex] = indexedVal
           change_notification_trigger(indexedVal, accessor)
           return target_object
 
-        return source_object[property][valOrIndex] if isNumber valOrIndex
+        return source_object[property][valOrIndex] if _.isNumber valOrIndex
         return simple_accessor(valOrIndex)
     else accessor = simple_accessor
 
     accessor.__accessorized_accessor = true
 
     change_notification_trigger = api.mixins.change_notification accessor
-    promote_array_methods source_val, accessor, change_notification_trigger if isArray source_val
+    promote_array_methods source_val, accessor, change_notification_trigger if _.isArray source_val
 
     api.mixins.json_serialization accessor, -> source_object[property]
 
@@ -93,17 +83,17 @@ define [UNDERSCORE_PATH], (_) ->
 
 
   api = (target, recurse=true) ->
-    wrapped = {}
+    wrapped = newFrom target
 
     is_a_wrappable = (property) ->
       typeof target[property] != 'function'
 
     create_accessor(property, target, wrapped) for own property of target when is_a_wrappable property
 
-    wrapped.prototype = target
     wrapped.__accessorized_object = yes
 
-    api.mixins.json_serialization wrapped
+    api.mixins.json_serialization wrapped, -> target
+    api.mixins.add_accessor wrapped, target
 
     return wrapped
 
@@ -116,6 +106,13 @@ define [UNDERSCORE_PATH], (_) ->
 
 
   api.mixins = {}
+
+  api.mixins.add_accessor = (target, backer) ->
+    target.addAccessor = (name, initialValue=undefined) ->
+      throw new api.errors.PropertyAlreadyExistsError(name) if name of target
+      backer[name] = initialValue
+      create_accessor name, backer, target
+
   api.mixins.change_notification = (target) ->
     subscriptions = []
 
@@ -131,18 +128,20 @@ define [UNDERSCORE_PATH], (_) ->
     return false unless sniff
     return sniff.kind is 'accessor'
 
-  api.mixins.json_serialization = (target, accessor_backer) ->
-    sniff = api.isAccessorized target
-    throw new Error 'can only mix-in on accessorized objects' unless sniff
+  api.mixins.json_serialization = (target, backer) ->
+     throw new Error 'can only mix-in on accessorized objects' unless api.isAccessorized target
 
-    if sniff.kind is 'object' then target.toJSON = ->
-      target.prototype
-
-    if sniff.kind is 'accessor' then target.toJSON = ->
-      val = accessor_backer()
+     target.toJSON = ->
+      val = backer()
       return val.toJSON() if val.toJSON?
       return val
 
+
+  api.errors =
+    PropertyAlreadyExistsError : class PropertyAlreadyExistsError extends Error
+      constructor : (@attemptedPropertyName) ->
+        @name = 'PropertyAlreadyExistsError'
+        @message = "The name of the property you are attempting to add [#{@attemptedPropertyName}] already exists on this object's prototype chain."
 
   #export the api
   return api

@@ -41,4 +41,4 @@ define ['src/accessorize', 'spec/helpers/SpecHelper'], (accessorize) ->
         expect(topic.sub_simple_property).toBeAFunction()
 
       it 'should create an accessor that is not on the prototype', ->
-        expect(topic.sub_simple_property).not.toEqual(topic.prototype.sub_simple_property)
+        expect(topic.sub_simple_property).not.toEqual(topic.toJSON().sub_simple_property)

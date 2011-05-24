@@ -42,3 +42,10 @@ define ['src/accessorize'], (accessorize) ->
 
       it 'should return the serialized version of the backing property', ->
         expect(ret_val).toBe '"string value"'
+
+    describe 'interactions with addAccessor', ->
+      beforeEach ->
+        obj.addAccessor 'added', "added"
+
+      it 'should include added properties in the JSON output', ->
+        (expect JSON.stringify obj).toContain 'added'

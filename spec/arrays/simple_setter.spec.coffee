@@ -23,7 +23,7 @@ define ['src/accessorize.js'], (accessorize) ->
           obj.arrayProperty(the_array)
 
         it 'should set the underlying value', ->
-          expect(obj.prototype.arrayProperty).toBe(the_array)
+          expect(obj.toJSON().arrayProperty).toBe(the_array)
 
         it 'should trigger a change event', ->
           expect(subscriber).toHaveBeenCalled()

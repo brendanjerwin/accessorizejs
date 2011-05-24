@@ -22,7 +22,7 @@ define ['src/accessorize.js'], (accessorize) ->
           obj.arrayProperty(1, "world")
 
         it 'should set the underlying value at the index location', ->
-          expect(obj.prototype.arrayProperty[1]).toEqual("world")
+          expect(obj.toJSON().arrayProperty[1]).toEqual("world")
 
         it 'should trigger a change event', ->
           expect(subscriber).toHaveBeenCalled()

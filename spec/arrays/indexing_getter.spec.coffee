@@ -14,7 +14,7 @@ define ['src/accessorize.js'], (accessorize) ->
           ret_val = obj.arrayProperty(1)
 
         it 'should not modify the array', ->
-          expect(obj.prototype.arrayProperty[1]).toEqual("world")
+          expect(obj.toJSON().arrayProperty[1]).toEqual("world")
 
         it 'should return the value from the requested index', ->
           expect(ret_val).toEqual("world")

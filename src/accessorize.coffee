@@ -24,6 +24,13 @@ define [UNDERSCORE_PATH], (_) ->
     f.prototype = prototype
     return new f
 
+  nativeBind = Function.prototype.bind
+  bind = (func, obj) ->
+    return (nativeBind.apply func, slice.call(arguments, 1)) if nativeBind? and func.bind is nativeBind
+    args = slice.call(arguments, 2)
+    return ->
+      func.apply(obj, args.concat(slice.call(arguments)))
+
   promote_array_methods = (source_array, target_accessor, change_notification_trigger) ->
       change_causing_methods = ['pop','push','reverse','shift','sort','splice','unshift']
       other_methods = ['concat', 'join', 'slice', 'indexOf', 'lastIndexOf']
@@ -37,7 +44,7 @@ define [UNDERSCORE_PATH], (_) ->
       promote method for method in change_causing_methods
 
       promote = (method) ->
-        target_accessor[method] = _.bind(source_array[method], source_array)
+        target_accessor[method] = bind source_array[method], source_array
 
       promote method for method in other_methods
 

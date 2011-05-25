@@ -12,8 +12,8 @@ define [UNDERSCORE_PATH], (_) ->
   'use strict'
 
   #Check runtime requirements
-  throw new Error('JSON is required for accessorize to run. You can get a polyfill here: https://github.com/douglascrockford/JSON-js/blob/master/json2.js') unless JSON?
-  throw new Error("Did not get an instance of underscore (_) loaded from #{UNDERSCORE_PATH}. The underscore module probably didn't `return` the object.") unless _?
+  if not JSON? then throw new Error('JSON is required for accessorize to run. You can get a polyfill here: https://github.com/douglascrockford/JSON-js/blob/master/json2.js')
+  if not _? then throw new Error("Did not get an instance of underscore (_) loaded from #{UNDERSCORE_PATH}. The underscore module probably didn't `return` the object.")
 
   api = undefined
 

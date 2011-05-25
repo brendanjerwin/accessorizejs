@@ -38,10 +38,12 @@ define ['src/accessorize'], (accessorize) ->
       ret_val = null
 
       beforeEach ->
-        ret_val = JSON.stringify obj.simpleProperty
+        #NOTE: Some browsers refuse to serialize an accessor even though it has a toJSON method. This is because, generally, a function is not a valid thing to serialize
+        #current browsers will call the toJSON if it exists, and ignore the function otherwise.
+        ret_val = obj.simpleProperty.toJSON()
 
-      it 'should return the serialized version of the backing property', ->
-        expect(ret_val).toBe '"string value"'
+      it 'should return the value of the backing property', ->
+        expect(ret_val).toBe "string value"
 
     describe 'interactions with addAccessor', ->
       beforeEach ->

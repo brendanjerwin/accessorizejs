@@ -23,11 +23,19 @@ define ['src/accessorize.js'], (accessorize) ->
         subscriber = spyOn(callbacks, 'subscriber')
         obj.arrayProperty.subscribe(callbacks.subscriber)
 
-      it 'should promote the methods from the array', ->
-        expect_promoted = (method) ->
+      expect_promoted = (method) ->
           expect(obj.arrayProperty[method]).toBeAFunction('called ' + method)
 
-        expect_promoted method for method in ['pop','push','reverse','shift','sort','splice','unshift'].concat(['concat', 'join', 'slice', 'indexOf', 'lastIndexOf'])
+      it 'should promote the methods from the array', ->
+        expect_promoted method for method in ['pop','push','reverse','shift','sort','splice','unshift'].concat(['concat', 'join', 'slice'])
+
+      if Array.prototype.indexOf?
+        it 'should promote the ES5 methods from the array too (indexOf)', ->
+          expect_promoted 'indexOf'
+
+      if Array.prototype.lastIndexOf?
+        it 'should promote the ES5 methods from the array too (lastIndexOf)', ->
+          expect_promoted 'lastIndexOf'
 
       describe "change causing methods", ->
         describe "pop", ->

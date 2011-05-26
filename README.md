@@ -122,8 +122,10 @@ The following [methods](https://developer.mozilla.org/en/JavaScript/Reference/Gl
   * concat
   * join
   * slice
-  * indexOf
-  * lastIndexOf
+  * indexOf *
+  * lastIndexOf *
+
+__* These methods are not natively provided by some browsers (IE up to 8). When they are not available, they are not promoted; but if they are patched in with a polyfill prior to accessorizing an object they will be promoted.__
 
 Setter Chaining
 ---------------

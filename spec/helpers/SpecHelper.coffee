@@ -10,4 +10,7 @@ define ['src/accessorize'],  (accessorize) ->
       toBeAnAccessor : ->
         accessorize.isAccessorized this.actual
 
+      toBeAccessorized : ->
+        !!(accessorize.isAccessorized this.actual)
+
 

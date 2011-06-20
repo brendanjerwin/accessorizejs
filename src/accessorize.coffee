@@ -24,6 +24,8 @@ define [UNDERSCORE_PATH], (_) ->
     f.prototype = prototype
     return new f
 
+  is_wrappable_object = (val) -> typeof val == "object" and not _.isArray val
+
   promote_array_methods = (source_array, target_accessor, change_notification_trigger) ->
       change_causing_methods = ['pop','push','reverse','shift','sort','splice','unshift']
       other_methods = ['concat', 'join', 'slice', 'indexOf', 'lastIndexOf']
@@ -45,7 +47,7 @@ define [UNDERSCORE_PATH], (_) ->
   create_accessor = (property, source_object, target_object) ->
     source_val = source_object[property]
 
-    if source_val? and typeof source_val == "object" and not _.isArray source_val
+    if source_val? and is_wrappable_object source_val
       source_object[property] = api(source_object[property])
 
     change_notification_trigger = undefined
@@ -55,7 +57,7 @@ define [UNDERSCORE_PATH], (_) ->
 
       return source_object[property] unless val?
 
-      source_object[property] = val
+      source_object[property] = if is_wrappable_object val then api val else val
       change_notification_trigger(val, accessor)
       return target_object
 
@@ -65,7 +67,7 @@ define [UNDERSCORE_PATH], (_) ->
         if _.isNumber(valOrIndex) and indexedVal?
           return _(source_object[property][valOrIndex]) if indexedVal == _
 
-          source_object[property][valOrIndex] = indexedVal
+          source_object[property][valOrIndex] = if is_wrappable_object indexedVal then api indexedVal else indexedVal
           change_notification_trigger(indexedVal, accessor)
           return target_object
 

@@ -84,6 +84,8 @@ define [UNDERSCORE_PATH], (_) ->
 
 
   api = (target, recurse=true) ->
+    if api.isAccessorized target then return target
+
     wrapped = newFrom target
 
     is_a_wrappable = (property) ->

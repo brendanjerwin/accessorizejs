@@ -26,23 +26,30 @@ define [UNDERSCORE_PATH], (_) ->
 
   is_wrappable_object = (val) -> typeof val == "object" and not _.isArray val
 
-  promote_array_methods = (source_array, target_accessor, change_notification_trigger) ->
-      change_causing_methods = ['pop','push','reverse','shift','sort','splice','unshift']
-      other_methods = ['concat', 'join', 'slice', 'indexOf', 'lastIndexOf']
+  toggle_promoted_array_methods = (backing_value, target_accessor, change_notification_trigger) ->
+    change_causing_methods = ['pop','push','reverse','shift','sort','splice','unshift']
+    other_methods = ['concat', 'join', 'slice', 'indexOf', 'lastIndexOf']
 
-      promote = (method) ->
-        target_accessor[method] = () ->
-          ret_val = source_array[method].apply(source_array, slice.call(arguments))
-          change_notification_trigger(target_accessor(), target_accessor)
-          return ret_val
+    remove = (method) ->
+      delete target_accessor[method]
 
-      promote method for method in change_causing_methods
+    remove method for method in change_causing_methods.concat other_methods
 
-      promote = (method) ->
-        if source_array[method]
-          target_accessor[method] = _.bind source_array[method], source_array
+    return unless _.isArray backing_value
 
-      promote method for method in other_methods
+    promote = (method) ->
+      target_accessor[method] = () ->
+        ret_val = backing_value[method].apply(backing_value, slice.call(arguments))
+        change_notification_trigger(target_accessor(), target_accessor)
+        return ret_val
+
+    promote method for method in change_causing_methods
+
+    promote = (method) ->
+      if backing_value[method]
+        target_accessor[method] = _.bind backing_value[method], backing_value
+
+    promote method for method in other_methods
 
   create_accessor = (property, source_object, target_object) ->
     source_val = source_object[property]
@@ -58,6 +65,7 @@ define [UNDERSCORE_PATH], (_) ->
       return source_object[property] unless val?
 
       source_object[property] = if is_wrappable_object val then api val else val
+      toggle_promoted_array_methods val, accessor, change_notification_trigger
       change_notification_trigger(val, accessor)
       return target_object
 
@@ -78,8 +86,7 @@ define [UNDERSCORE_PATH], (_) ->
     accessor.__accessorized_accessor = true
 
     change_notification_trigger = api.mixins.change_notification accessor
-    promote_array_methods source_val, accessor, change_notification_trigger if _.isArray source_val
-
+    toggle_promoted_array_methods source_val, accessor, change_notification_trigger
     api.mixins.json_serialization accessor, -> source_object[property]
 
     target_object[property] = accessor

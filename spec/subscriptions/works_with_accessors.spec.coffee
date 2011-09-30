@@ -20,6 +20,9 @@ define ['src/accessorize.js'], (accessorize) ->
     it 'should mix in the subscription stuff on the accessor', ->
       expect(obj.property_one.subscribe).toBeAFunction()
 
+    it 'should invoke the subscription when it is added', ->
+      (expect subscriber).toHaveBeenCalled()
+
     describe 'when a value is set', ->
       beforeEach ->
         obj.property_one("new value")
@@ -32,4 +35,4 @@ define ['src/accessorize.js'], (accessorize) ->
         foo = obj.property_one()
 
       it 'should not call the subscriber', ->
-        expect(subscriber).not.toHaveBeenCalled()
+        expect(subscriber.callCount).toBe 1

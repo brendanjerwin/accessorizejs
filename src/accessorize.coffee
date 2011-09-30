@@ -130,6 +130,7 @@ define [UNDERSCORE_PATH], (_) ->
 
     target.subscribe = (event_handler) ->
       subscriptions.push event_handler
+      event_handler target(), target
       return event_handler
 
     return (new_value, accessor) ->

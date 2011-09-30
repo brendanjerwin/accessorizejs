@@ -14,10 +14,10 @@ define ['src/accessorize.js'], (accessorize) ->
     trigger_for_2 = undefined
 
     beforeEach ->
-      target1 = {}
+      target1 = (accessorize target: '').target
       trigger_for_1 = accessorize.mixins.change_notification target1
 
-      target2 = {}
+      target2 = (accessorize target: '').target
       trigger_for_2 =  accessorize.mixins.change_notification target2
 
       subscriber_for_1 = spyOn(callbacks, 'subscriber_for_1')
@@ -31,17 +31,17 @@ define ['src/accessorize.js'], (accessorize) ->
         trigger_for_1('value for 1')
 
       it 'should have called the subscriber for 1', ->
-        expect(subscriber_for_1).toHaveBeenCalled()
+        expect(subscriber_for_1.callCount).toBe 2
 
       it 'should not have called the subscriber for 2', ->
-        expect(subscriber_for_2).not.toHaveBeenCalled()
+        expect(subscriber_for_2.callCount).toBe 1
 
     describe 'target 2', ->
       beforeEach ->
         trigger_for_2('value for 2')
 
       it 'should have called the subscriber for 2', ->
-        expect(subscriber_for_2).toHaveBeenCalled()
+        expect(subscriber_for_2.callCount).toBe 2
 
       it 'should not have called the subscriber for 1', ->
-        expect(subscriber_for_1).not.toHaveBeenCalled()
+        expect(subscriber_for_1.callCount).toBe 1

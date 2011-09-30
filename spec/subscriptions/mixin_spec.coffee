@@ -1,6 +1,6 @@
 define ['src/accessorize.js'], (accessorize) ->
   describe 'subscription mixin', ->
-    target = {}
+    target = (accessorize target: '').target
     trigger = {}
 
     beforeEach ->

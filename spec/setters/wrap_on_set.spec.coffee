@@ -32,8 +32,8 @@ define ['src/accessorize'], (accessorize) ->
               (expect parent.arrayProperty(1)).toBeAccessorized()
 
         describe_object {prop: "1"}, "object"
-        describe_object (new Date), 'date'
 
+        describe_non_object new Date, 'bar date'
         describe_non_object 'string', 'string'
         describe_non_object 1, 'number'
         describe_non_object (->), 'function'
@@ -61,8 +61,8 @@ define ['src/accessorize'], (accessorize) ->
             (expect parent.simpleProperty()).toBeAccessorized()
 
       describe_object {prop: "1"}, "object"
-      describe_object (new Date), 'date'
 
+      describe_non_object new Date, 'foo date'
       describe_non_object 'string', 'string'
       describe_non_object 1, 'number'
       describe_non_object (->), 'function'

@@ -24,7 +24,10 @@ define [UNDERSCORE_PATH], (_) ->
     f.prototype = prototype
     return new f
 
-  is_wrappable_object = (val) -> typeof val == "object" and not _.isArray val
+  is_value_that_should_be_accessorized = (val) ->
+    return no if _.isArray val
+    return no if val instanceof Date
+    return yes if typeof val == "object"
 
   toggle_promoted_array_methods = (backing_value, target_accessor, change_notification_trigger) ->
     change_causing_methods = ['pop','push','reverse','shift','sort','splice','unshift']
@@ -54,7 +57,7 @@ define [UNDERSCORE_PATH], (_) ->
   create_accessor = (property, source_object, target_object) ->
     source_val = source_object[property]
 
-    if source_val? and is_wrappable_object source_val
+    if source_val? and is_value_that_should_be_accessorized source_val
       source_object[property] = api(source_object[property])
 
     change_notification_trigger = undefined
@@ -64,7 +67,7 @@ define [UNDERSCORE_PATH], (_) ->
 
       return source_object[property] unless val?
 
-      source_object[property] = if is_wrappable_object val then api val else val
+      source_object[property] = if is_value_that_should_be_accessorized val then api val else val
       toggle_promoted_array_methods val, accessor, change_notification_trigger
       change_notification_trigger(val, accessor)
       return target_object
@@ -75,7 +78,7 @@ define [UNDERSCORE_PATH], (_) ->
         if _.isNumber(valOrIndex) and indexedVal?
           return _(source_object[property][valOrIndex]) if indexedVal == _
 
-          source_object[property][valOrIndex] = if is_wrappable_object indexedVal then api indexedVal else indexedVal
+          source_object[property][valOrIndex] = if is_value_that_should_be_accessorized indexedVal then api indexedVal else indexedVal
           change_notification_trigger(indexedVal, accessor)
           return target_object
 
@@ -97,10 +100,10 @@ define [UNDERSCORE_PATH], (_) ->
 
     wrapped = newFrom target
 
-    is_a_wrappable = (property) ->
+    should_create_accessor_for = (property) ->
       typeof target[property] != 'function'
 
-    create_accessor(property, target, wrapped) for own property of target when is_a_wrappable property
+    create_accessor(property, target, wrapped) for own property of target when should_create_accessor_for property
 
     wrapped.__accessorized_object = yes
 

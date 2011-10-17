@@ -31,13 +31,6 @@ define ['src/accessorize'], (accessorize) ->
             it 'should wrap', ->
               (expect parent.arrayProperty(1)).toBeAccessorized()
 
-        describe_object {prop: "1"}, "object"
-
-        describe_non_object new Date, 'bar date'
-        describe_non_object 'string', 'string'
-        describe_non_object 1, 'number'
-        describe_non_object (->), 'function'
-
     describe 'when the accessor is a regular accessor', ->
 
       beforeEach ->

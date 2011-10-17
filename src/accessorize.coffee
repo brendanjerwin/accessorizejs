@@ -136,6 +136,10 @@ define [UNDERSCORE_PATH], (_) ->
       event_handler target(), target
       return event_handler
 
+    target.unsubscribe = (event_handler) ->
+      subscriptions = _(subscriptions).reject (existing) =>
+        existing == event_handler
+
     return (new_value, accessor) ->
       handler(new_value, accessor) for handler in subscriptions
 

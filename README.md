@@ -1,7 +1,9 @@
 accessorize.js
 ==============
 _Add fancy-ass-observable-hyper-helpful accessors to any object._
+
 [![Build Status](https://secure.travis-ci.org/[brendanjerwin]/[accessorizejs].png)](http://travis-ci.org/[brendanjerwin]/[accessorizejs])
+
 `accessorize.js` makes it easy to convert plain javascript 'properties'
 into fancy-ass-observable-accessor-methods! Simply call `accessorize()` with
 your plain-old-javascript-object and get back a super-charged wrapped

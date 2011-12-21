@@ -41,4 +41,4 @@ define ['src/accessorize.js'], (accessorize) ->
         expect(topic.sub_simple_property).to.be.a.function
 
       it 'should create an accessor that is not on the prototype', ->
-        expect(topic.sub_simple_property).not.toEqual(topic.toJSON().sub_simple_property)
+        expect(topic.sub_simple_property).not.to.eql(topic.toJSON().sub_simple_property)

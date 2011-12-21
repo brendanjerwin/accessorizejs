@@ -25,7 +25,6 @@ define ['src/accessorize.js'], (accessorize) ->
 
       it 'should not touch the method', ->
         expect(topic.source.hasOwnProperty 'a_method').to.be.true
-
         expect(topic.wrapped.hasOwnProperty 'a_method').to.be.false
 
       it 'should make an accessor for the object property', ->

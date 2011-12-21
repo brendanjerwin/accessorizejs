@@ -1,4 +1,4 @@
-define ['src/accessorize', 'spec/helpers/SpecHelper'], (accessorize) ->
+define ['src/accessorize.js'], (accessorize) ->
   'use strict'
 
   obj = undefined

@@ -1,4 +1,4 @@
-require ['node_modules/mocha/mocha.js','node_modules/chai/chai.js'], (mocha, chai)->
+require ['node_modules/mocha/mocha.js','node_modules/chai/chai.js','node_modules/underscore/underscore.js'], (mocha, chai)->
   mocha = global.mocha
   mocha.setup('bdd')
 

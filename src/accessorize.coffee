@@ -7,13 +7,14 @@ into fancy-ass-observable-accessor-methods!
 See [accessorizejs.com](http://accessorizejs.com) for more info and license information.
 
 ###
-UNDERSCORE_PATH ?= "lib/underscore"
-define [UNDERSCORE_PATH], (_) ->
+define ['underscore'], (_) ->
   'use strict'
+
+  _ ?= (global == window)._
 
   #Check runtime requirements
   if not JSON? then throw new Error('JSON is required for accessorize to run. You can get a polyfill here: https://github.com/douglascrockford/JSON-js/blob/master/json2.js')
-  if not _? then throw new Error("Did not get an instance of underscore (_) loaded from #{UNDERSCORE_PATH}. The underscore module probably didn't `return` the object.")
+  if not _? then throw new Error("Did not get an instance of underscore (_). The underscore module probably didn't get loaded first.")
 
   api = undefined
 

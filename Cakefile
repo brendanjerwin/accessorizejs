@@ -10,6 +10,7 @@ task 'minify', 'Minify the resulting application file after build', ->
     console.log stdout + stderr
 
 task 'test', 'Run the specs', ->
+  exec '/.node_modules/coffee-script/bin/coffee --compile spec'
   exec './node_modules/mocha/bin/mocha ./spec/initialize.coffee --colors --growl --reporter dot', (err, stdout, stderr) ->
     console.log stdout + stderr
 

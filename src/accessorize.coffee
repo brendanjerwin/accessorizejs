@@ -10,7 +10,7 @@ See [accessorizejs.com](http://accessorizejs.com) for more info and license info
 define ['underscore'], (_) ->
   'use strict'
 
-  _ ?= (global == window)._
+  _ ?= (global || window)._
 
   #Check runtime requirements
   if not JSON? then throw new Error('JSON is required for accessorize to run. You can get a polyfill here: https://github.com/douglascrockford/JSON-js/blob/master/json2.js')

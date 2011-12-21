@@ -19,6 +19,9 @@ class SinatraStaticServer < Sinatra::Base
     path.gsub!(/spec\/spec/, "spec")
     path.gsub!(/spec\/src/, "src")
 
+    path = "node_modules/underscore/underscore.js" if path == "/spec/underscore.js"
+    path = "node_modules/sinon/lib/sinon.js" if path == "/spec/sinon.js"
+
     cache_control :must_revalidate
     expires 0, :must_revalidate
     file_path = File.join($root, path)

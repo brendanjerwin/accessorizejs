@@ -4,6 +4,6 @@ global.expect = chai.expect
 global.Assertion = chai.Assertion
 
 requirejs.config nodeRequire: require
-
-requirejs ['spec/helpers/SpecHelper'], ->
-  requirejs ['spec/basic_shape.spec']
+global.UNDERSCORE_PATH = 'underscore'
+requirejs ['spec/spec_list.js', 'spec/helpers/SpecHelper'], (list)->
+  requirejs list.specs

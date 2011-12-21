@@ -1,4 +1,4 @@
-define ['src/accessorize'], (accessorize) ->
+define ['src/accessorize.js'], (accessorize) ->
 
   describe 'accessorized marker (.isAccessorized)', ->
 
@@ -13,28 +13,28 @@ define ['src/accessorize'], (accessorize) ->
 
       it 'should identify a wrapped object', ->
         answer = accessorize.isAccessorized(obj)
-        expect(answer).toBeTruthy()
-        expect(answer.kind).toBe('object')
+        expect(!!answer).to.be.true
+        expect(answer.kind).to.equal('object')
 
       it 'should identify an accessor', ->
         answer = accessorize.isAccessorized(obj.simpleProperty)
-        expect(answer).toBeTruthy()
-        expect(answer.kind).toBe('accessor')
+        expect(!!answer).to.be.true
+        expect(answer.kind).to.equal('accessor')
 
       it 'should identify an array accessor', ->
         answer = accessorize.isAccessorized(obj.arrayProperty)
-        expect(answer).toBeTruthy()
-        expect(answer.kind).toBe('accessor')
+        expect(!!answer).to.be.true
+        expect(answer.kind).to.equal('accessor')
 
       it 'should not identify an unwrapped object', ->
-        expect(accessorize.isAccessorized(obj.prototype)).toBeFalsy()
+        expect(accessorize.isAccessorized(obj.prototype)).to.be.false
 
       it 'should not identify a non-accessor function', ->
-        expect(accessorize.isAccessorized(->)).toBeFalsy()
+        expect(accessorize.isAccessorized(->)).to.be.false
 
       it 'should not identify a null', ->
-        expect(accessorize.isAccessorized(null)).toBeFalsy()
+        expect(accessorize.isAccessorized(null)).to.be.false
 
       it 'should not identify an undefined', ->
-        expect(accessorize.isAccessorized(undefined)).toBeFalsy()
+        expect(accessorize.isAccessorized(undefined)).to.be.false
 

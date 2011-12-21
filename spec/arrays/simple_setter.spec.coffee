@@ -1,4 +1,4 @@
-define ['src/accessorize.js'], (accessorize) ->
+define ['src/accessorize.js', 'sinon'], (accessorize, sinon) ->
   describe "Array Accessors", ->
     obj = undefined
     the_array = [1,2,3]
@@ -9,21 +9,22 @@ define ['src/accessorize.js'], (accessorize) ->
           arrayProperty : []
 
       it 'should allow the value to be set', ->
-        expect(->obj.arrayProperty(the_array)).not.toThrow()
+        expect(->obj.arrayProperty(the_array)).not.to.throw()
 
       describe 'setting a value', ->
-        callbacks =
-          subscriber : ->
-
+        callbacks = undefined
         subscriber = undefined
 
         beforeEach ->
-          subscriber = spyOn(callbacks, 'subscriber')
+          callbacks =
+            subscriber : ->
+
+          subscriber = sinon.spy(callbacks, 'subscriber')
           obj.arrayProperty.subscribe callbacks.subscriber
           obj.arrayProperty(the_array)
 
         it 'should set the underlying value', ->
-          expect(obj.toJSON().arrayProperty).toBe(the_array)
+          expect(obj.toJSON().arrayProperty).to.eql(the_array)
 
         it 'should trigger a change event', ->
-          expect(subscriber).toHaveBeenCalled()
+          expect subscriber.called

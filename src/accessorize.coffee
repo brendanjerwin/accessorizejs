@@ -7,7 +7,7 @@ into fancy-ass-observable-accessor-methods!
 See [accessorizejs.com](http://accessorizejs.com) for more info and license information.
 
 ###
-UNDERSCORE_PATH = "lib/underscore"
+UNDERSCORE_PATH ?= "lib/underscore"
 define [UNDERSCORE_PATH], (_) ->
   'use strict'
 

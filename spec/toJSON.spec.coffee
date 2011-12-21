@@ -1,5 +1,4 @@
-define ['src/accessorize'], (accessorize) ->
-
+define ['src/accessorize.js'], (accessorize) ->
 
   describe 'toJSON method', ->
     obj = null
@@ -16,11 +15,11 @@ define ['src/accessorize'], (accessorize) ->
       obj.arrayProperty(1, "two")
 
     it 'should have a toJSON method on the wrapped object', ->
-      expect(obj.toJSON).toBeAFunction()
+      expect(obj.toJSON).to.be.a.function
 
     it 'should have a toJSON method on the accessors', ->
-      expect(obj.simpleProperty.toJSON).toBeAFunction()
-      expect(obj.arrayProperty.toJSON).toBeAFunction()
+      expect(obj.simpleProperty.toJSON).to.be.a.function
+      expect(obj.arrayProperty.toJSON).to.be.a.function
 
     describe 'object level method', ->
       ret_val = null
@@ -29,10 +28,10 @@ define ['src/accessorize'], (accessorize) ->
         ret_val = JSON.stringify obj
 
       it 'should return valid JSON', ->
-        expect(-> JSON.parse(ret_val)).not.toThrow()
+        expect(-> JSON.parse(ret_val)).not.to.throw
 
       it 'should return the serialized object', ->
-        expect(ret_val).toBe('{"simpleProperty":"string value","arrayProperty":["one","two"],"objectProperty":{"simpleProperty":"another value"}}')
+        expect(ret_val).to.eql('{"simpleProperty":"string value","arrayProperty":["one","two"],"objectProperty":{"simpleProperty":"another value"}}')
 
     describe 'accessor level method', ->
       ret_val = null
@@ -43,11 +42,11 @@ define ['src/accessorize'], (accessorize) ->
         ret_val = obj.simpleProperty.toJSON()
 
       it 'should return the value of the backing property', ->
-        expect(ret_val).toBe "string value"
+        expect(ret_val).to.eql "string value"
 
     describe 'interactions with addAccessor', ->
       beforeEach ->
         obj.addAccessor 'added', "added"
 
       it 'should include added properties in the JSON output', ->
-        (expect JSON.stringify obj).toContain 'added'
+        (expect JSON.stringify obj).to.include 'added'

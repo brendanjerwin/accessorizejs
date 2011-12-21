@@ -1,16 +1,14 @@
-define ['src/accessorize.js'], (accessorize) ->
+define ['src/accessorize.js', 'sinon'], (accessorize, sinon) ->
   describe "Array Accessors", ->
     obj = undefined
     the_array = undefined
-    callbacks =
-      subscriber : ->
-
+    callbacks = undefined
     subscriber = undefined
     ret_val = undefined
 
     it_should_call = ->
       it 'should call the subscriber', ->
-        expect(subscriber).toHaveBeenCalled()
+        expect(subscriber.called).to.be.true
 
 
     describe "Promoted Methods", ->
@@ -20,11 +18,13 @@ define ['src/accessorize.js'], (accessorize) ->
         obj = accessorize
           arrayProperty : the_array
 
-        subscriber = spyOn(callbacks, 'subscriber')
+        callbacks =
+          subscriber : ->
+        subscriber = sinon.spy(callbacks, 'subscriber')
         obj.arrayProperty.subscribe(callbacks.subscriber)
 
       expect_promoted = (method) ->
-          expect(obj.arrayProperty[method]).toBeAFunction('called ' + method)
+          expect(obj.arrayProperty[method]).to.be.a.function
 
       it 'should promote the methods from the array', ->
         expect_promoted method for method in ['pop','push','reverse','shift','sort','splice','unshift'].concat(['concat', 'join', 'slice'])
@@ -45,10 +45,10 @@ define ['src/accessorize.js'], (accessorize) ->
           it_should_call()
 
           it 'should return the right value', ->
-            expect(ret_val).toEqual("here")
+            expect(ret_val).to.eql "here"
 
           it 'should shorten the array', ->
-            expect(the_array.length).toBe(3)
+            expect(the_array.length).to.eql 3
 
 
         describe "push", ->
@@ -58,10 +58,10 @@ define ['src/accessorize.js'], (accessorize) ->
           it_should_call()
 
           it 'should return the right value', ->
-            expect(ret_val).toEqual(5)
+            expect(ret_val).to.eql(5)
 
           it 'should lengthen the array', ->
-            expect(the_array.length).toBe(5)
+            expect(the_array.length).to.eql(5)
 
         describe "reverse", ->
           beforeEach ->
@@ -70,8 +70,8 @@ define ['src/accessorize.js'], (accessorize) ->
           it_should_call()
 
           it 'should reverse the array', ->
-            expect(the_array[0]).toBe("here")
-            expect(the_array[3]).toBe("hello")
+            expect(the_array[0]).to.eql("here")
+            expect(the_array[3]).to.eql("hello")
 
         describe "shift", ->
           beforeEach ->
@@ -80,10 +80,10 @@ define ['src/accessorize.js'], (accessorize) ->
           it_should_call()
 
           it 'should return the right value', ->
-            expect(ret_val).toBe("hello")
+            expect(ret_val).to.eql("hello")
 
           it 'should shorten the array', ->
-            expect(the_array.length).toBe(3)
+            expect(the_array.length).to.eql(3)
 
         describe "sort", ->
           beforeEach ->
@@ -92,8 +92,8 @@ define ['src/accessorize.js'], (accessorize) ->
           it_should_call
 
           it 'should sort the array', ->
-            expect(the_array[0]).toEqual("I'm")
-            expect(the_array[3]).toEqual("world")
+            expect(the_array[0]).to.eql("I'm")
+            expect(the_array[3]).to.eql("world")
 
         # describe "splice", ->
 

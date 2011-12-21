@@ -1,4 +1,12 @@
-define ['src/accessorize'], (accessorize) ->
+define ['src/accessorize.js'], (accessorize) ->
+
+  Assertion.prototype.toBeAFunction = ->
+    this.assert(
+        typeof this.obj == 'function'
+      , 'expected ' + this.inspect + ' to be a function'
+      , 'expected ' + this.inspect + ' to not be a function');
+
+    return this
 
   Assertion.prototype.typeof = (type) ->
     this.assert(

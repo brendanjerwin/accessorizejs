@@ -1,4 +1,3 @@
-specs = ['spec/basic_shape.spec']
 require ['node_modules/mocha/mocha.js','node_modules/chai/chai.js'], (mocha, chai)->
   mocha = global.mocha
   mocha.setup('bdd')
@@ -6,8 +5,8 @@ require ['node_modules/mocha/mocha.js','node_modules/chai/chai.js'], (mocha, cha
   global.expect = chai.expect
   global.Assertion = chai.Assertion
 
-  require ['spec/helpers/SpecHelper'], ->
-    require specs, ->
+  require ['spec/spec_list', 'spec/helpers/SpecHelper'], (list)->
+    require list.specs, ->
       mocha
         .run()
         .globals(['define', 'expect','Assertion' ])

@@ -1,4 +1,4 @@
-define ['src/accessorize', 'lib/underscore'], (accessorize, _) ->
+define ['src/accessorize.js', 'underscore'], (accessorize, _) ->
   'use strict'
 
   obj = undefined
@@ -10,20 +10,20 @@ define ['src/accessorize', 'lib/underscore'], (accessorize, _) ->
         arrayProperty : [ "hello", "world" ]
 
     it 'should allow the simple accessor to be called with underscore', ->
-      expect(-> obj.singleProperty(_)).not.toThrow()
+      expect(-> obj.singleProperty(_)).not.to.throw()
 
     it 'should allow the array accessor to be called with underscore', ->
-      expect(-> obj.arrayProperty(_)).not.toThrow()
+      expect(-> obj.arrayProperty(_)).not.to.throw()
 
     it 'should allow the indexing array accessor to be called with underscore', ->
-      expect(-> obj.arrayProperty(1,_)).not.toThrow()
+      expect(-> obj.arrayProperty(1,_)).not.to.throw()
 
     describe "return value", ->
       ret_val = undefined
 
       it_should_wrap = ->
         it 'should return an _ wrapped object', ->
-          expect(ret_val._wrapped).toBeDefined()
+          expect(ret_val._wrapped).to.exist
 
       describe "simple accessor", ->
         beforeEach ->

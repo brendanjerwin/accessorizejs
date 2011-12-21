@@ -9,4 +9,4 @@ define ['src/accessorize.js'], (accessorize) ->
           arrayProperty : the_array
 
       it 'should return the array', ->
-        expect(obj.arrayProperty()).toBe(the_array)
+        expect(obj.arrayProperty()).to.eql(the_array)

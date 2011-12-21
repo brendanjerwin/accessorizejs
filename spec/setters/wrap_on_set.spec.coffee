@@ -1,4 +1,4 @@
-define ['src/accessorize'], (accessorize) ->
+define ['src/accessorize.js'], (accessorize) ->
   'use strict'
 
   describe 'wrap on set', ->
@@ -7,12 +7,11 @@ define ['src/accessorize'], (accessorize) ->
     describe 'when the accessor is an array accessor', ->
 
       beforeEach ->
-        @parent = accessorize arrayProperty: [1,2,3]
-        parent = @parent
+        parent = accessorize arrayProperty: [1,2,3]
 
       it 'should not wrap', ->
-        @parent.arrayProperty []
-        (expect @parent.arrayProperty()).not.toBeAccessorized()
+        parent.arrayProperty []
+        (expect parent.arrayProperty()).not.to.be.accessorized
 
       describe 'when the accessor is an indexed array accessor', ->
         describe_non_object = (value, name) ->
@@ -21,7 +20,7 @@ define ['src/accessorize'], (accessorize) ->
               parent.arrayProperty 1, value
 
             it 'should not wrap', ->
-              (expect parent.arrayProperty(1)).not.toBeAccessorized()
+              (expect parent.arrayProperty(1)).not.to.be.accessorized
 
         describe_object = (value, name) ->
           describe "when the value is a #{name}", ->
@@ -29,13 +28,13 @@ define ['src/accessorize'], (accessorize) ->
               parent.arrayProperty 1, value
 
             it 'should wrap', ->
-              (expect parent.arrayProperty(1)).toBeAccessorized()
+              (expect parent.arrayProperty(1)).to.be.accessorized
 
     describe 'when the accessor is a regular accessor', ->
 
       beforeEach ->
-        @parent = accessorize simpleProperty: 'something'
-        parent = @parent
+        parent = accessorize simpleProperty: 'something'
+        parent = parent
 
       describe_non_object = (value, name) ->
         describe "when the value is a #{name}", ->
@@ -43,7 +42,7 @@ define ['src/accessorize'], (accessorize) ->
             parent.simpleProperty value
 
           it 'should not wrap', ->
-            (expect parent.simpleProperty()).not.toBeAccessorized()
+            (expect parent.simpleProperty()).not.to.be.accessorized
 
       describe_object = (value, name) ->
         describe "when the value is a #{name}", ->
@@ -51,7 +50,7 @@ define ['src/accessorize'], (accessorize) ->
             parent.simpleProperty value
 
           it 'should wrap', ->
-            (expect parent.simpleProperty()).toBeAccessorized()
+            (expect parent.simpleProperty()).to.be.accessorized
 
       describe_object {prop: "1"}, "object"
 

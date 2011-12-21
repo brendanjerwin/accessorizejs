@@ -22,7 +22,7 @@ task 'test', 'Run the specs', ->
     specs = specs.concat files
 
   fs.writeFileSync 'spec/spec_list.js', "define([], {specs : #{JSON.stringify specs}})"
-  exec './node_modules/mocha/bin/mocha ./spec/initialize.coffee --colors --growl --reporter spec', (err, stdout, stderr) ->
+  exec './node_modules/mocha/bin/mocha ./spec/initialize.coffee --colors --growl --reporter dot', (err, stdout, stderr) ->
     console.log stdout + stderr
     throw err if err
 

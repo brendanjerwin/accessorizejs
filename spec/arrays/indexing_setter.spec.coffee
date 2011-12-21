@@ -11,17 +11,11 @@ define ['src/accessorize.js', 'sinon'], (accessorize, sinon) ->
         expect(->obj.arrayProperty(1, "world")).not.to.throw()
 
       describe 'setting a value at an index', ->
-        callbacks =
-          subscriber : ->
-
         subscriber = undefined
 
         beforeEach ->
-          callbacks =
-            subscriber : ->
-
-          subscriber = sinon.spy(callbacks, 'subscriber')
-          obj.arrayProperty.subscribe callbacks.subscriber
+          subscriber = sinon.spy(->)
+          obj.arrayProperty.subscribe subscriber
           obj.arrayProperty(1, "world")
 
         it 'should set the underlying value at the index location', ->

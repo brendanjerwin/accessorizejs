@@ -7,7 +7,7 @@ define ['src/accessorize.js'], (accessorize) ->
   topic = {}
 
   describe 'wrap function', ->
-    describe 'when called', ->
+    describe 'happy path', ->
       beforeEach ->
         topic = wrap_it {}
 

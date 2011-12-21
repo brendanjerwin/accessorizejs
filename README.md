@@ -8,7 +8,7 @@ your plain-old-javascript-object and get back a super-charged wrapped
 version.
 
 _Unimportant Note_: Actually you could name `accessorize` anything you want since it's packaged as
-a [CommonJS AMD Module](http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition)
+an [AMD Module](https://github.com/amdjs/amdjs-api/wiki/AMD)
 
 Accessors
 ---------

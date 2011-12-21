@@ -1,8 +1,7 @@
-define ['src/accessorize.js', 'spec/helpers/SpecHelper'], (accessorize) ->
+define ['src/accessorize.js'], (accessorize) ->
   describe 'basic shape of the api', ->
-
     it 'should exist', ->
-      expect(accessorize).toBeDefined()
+      expect(accessorize).to.exist
 
     it 'should be a function', ->
-      expect(accessorize).toBeAFunction()
+      expect(accessorize).to.have.typeof 'function'

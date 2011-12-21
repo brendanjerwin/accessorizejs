@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="node_modules/mocha/mocha.css" />
+    <script src="node_modules/mocha/mocha.js"></script>
+    <script>mocha.setup('bdd')</script>
+    <script>
+      onload = function(){
+        mocha
+        .run()
+        .globals(['define']) // acceptable globals
+      };
+    </script>
+
+    <script data-main="./spec/basic_shape.spec.js" src="node_modules/requirejs/require.js"></script>
+
+  </head>
+  <body>
+    <div id="mocha"></div>
+  </body>
+</html>

@@ -12,7 +12,7 @@
     "test" : "./spec"
   },
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha ./spec/initialize.coffee"
+    "test": "node_modules/coffee-script/bin/cake test"
   },
   "engines": {
     "node": ">=0.6.0"

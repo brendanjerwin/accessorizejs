@@ -1,0 +1,159 @@
+<!DOCTYPE html>  <html> <head>   <title>accessorize.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="rocco.css" /> </head> <body> <div id="navbar">     <h3>accessorize.js - Add fancy-ass-observable-hyper-helpful accessors to any object.<em></em></h3>   </div>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               accessorize.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <h1>#</h1>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">_Add</span> <span class="nx">observable</span> <span class="nx">accessors</span> <span class="nx">to</span> <span class="nx">any</span> <span class="nx">object</span><span class="p">.</span><span class="nx">_</span>
+
+<span class="o">`</span><span class="nx">accessorize</span><span class="p">.</span><span class="nx">js</span><span class="o">`</span> <span class="nx">makes</span> <span class="nx">it</span> <span class="nx">easy</span> <span class="nx">to</span> <span class="nx">convert</span> <span class="nx">plain</span> <span class="nx">javascript</span> <span class="s1">&#39;properties&#39;</span>
+<span class="nx">into</span> <span class="nx">fancy</span><span class="o">-</span><span class="nx">ass</span><span class="o">-</span><span class="nx">observable</span><span class="o">-</span><span class="nx">accessor</span><span class="o">-</span><span class="nx">methods</span><span class="o">!</span>
+
+<span class="nx">See</span> <span class="p">[</span><span class="nx">accessorizejs</span><span class="p">.</span><span class="nx">com</span><span class="p">](</span><span class="nx">http</span><span class="o">:</span><span class="err">//accessorizejs.com) for more info and license information.</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h1>#</h1>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">define</span> <span class="p">[</span><span class="s1">&#39;underscore&#39;</span><span class="p">],</span> <span class="nf">(_) -&gt;</span>
+  <span class="s1">&#39;use strict&#39;</span>
+
+  <span class="nx">_</span> <span class="o">?=</span> <span class="p">(</span><span class="nx">global</span> <span class="o">||</span> <span class="nb">window</span><span class="p">).</span><span class="nx">_</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Check runtime requirements</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">if</span> <span class="o">not</span> <span class="nx">JSON</span><span class="o">?</span> <span class="k">then</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;JSON is required for accessorize to run. You can get a polyfill here: https://github.com/douglascrockford/JSON-js/blob/master/json2.js&#39;</span><span class="p">)</span>
+  <span class="k">if</span> <span class="o">not</span> <span class="nx">_</span><span class="o">?</span> <span class="k">then</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Did not get an instance of underscore (_). The underscore module probably didn&#39;t get loaded first.&quot;</span><span class="p">)</span>
+
+  <span class="nv">api = </span><span class="kc">undefined</span>
+
+  <span class="nv">slice = </span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span>
+
+  <span class="nv">newFrom = </span><span class="nf">(prototype) -&gt;</span>
+    <span class="nv">f = </span><span class="o">-&gt;</span>
+    <span class="nv">f.prototype = </span><span class="nx">prototype</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">f</span>
+
+  <span class="nv">is_value_that_should_be_accessorized = </span><span class="nf">(val) -&gt;</span>
+    <span class="k">return</span> <span class="kc">no</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">val</span>
+    <span class="k">return</span> <span class="kc">no</span> <span class="k">if</span> <span class="nx">val</span> <span class="k">instanceof</span> <span class="nb">Date</span>
+    <span class="k">return</span> <span class="kc">yes</span> <span class="k">if</span> <span class="k">typeof</span> <span class="nx">val</span> <span class="o">==</span> <span class="s2">&quot;object&quot;</span>
+
+  <span class="nv">toggle_promoted_array_methods = </span><span class="nf">(backing_value, target_accessor, change_notification_trigger) -&gt;</span>
+    <span class="nv">change_causing_methods = </span><span class="p">[</span><span class="s1">&#39;pop&#39;</span><span class="p">,</span><span class="s1">&#39;push&#39;</span><span class="p">,</span><span class="s1">&#39;reverse&#39;</span><span class="p">,</span><span class="s1">&#39;shift&#39;</span><span class="p">,</span><span class="s1">&#39;sort&#39;</span><span class="p">,</span><span class="s1">&#39;splice&#39;</span><span class="p">,</span><span class="s1">&#39;unshift&#39;</span><span class="p">]</span>
+    <span class="nv">other_methods = </span><span class="p">[</span><span class="s1">&#39;concat&#39;</span><span class="p">,</span> <span class="s1">&#39;join&#39;</span><span class="p">,</span> <span class="s1">&#39;slice&#39;</span><span class="p">,</span> <span class="s1">&#39;indexOf&#39;</span><span class="p">,</span> <span class="s1">&#39;lastIndexOf&#39;</span><span class="p">]</span>
+
+    <span class="nv">remove = </span><span class="nf">(method) -&gt;</span>
+      <span class="k">delete</span> <span class="nx">target_accessor</span><span class="p">[</span><span class="nx">method</span><span class="p">]</span>
+
+    <span class="nx">remove</span> <span class="nx">method</span> <span class="k">for</span> <span class="nx">method</span> <span class="k">in</span> <span class="nx">change_causing_methods</span><span class="p">.</span><span class="nx">concat</span> <span class="nx">other_methods</span>
+
+    <span class="k">return</span> <span class="nx">unless</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">backing_value</span>
+
+    <span class="nv">promote = </span><span class="nf">(method) -&gt;</span>
+      <span class="nx">target_accessor</span><span class="p">[</span><span class="nx">method</span><span class="p">]</span> <span class="o">=</span> <span class="nf">() -&gt;</span>
+        <span class="nv">ret_val = </span><span class="nx">backing_value</span><span class="p">[</span><span class="nx">method</span><span class="p">].</span><span class="nx">apply</span><span class="p">(</span><span class="nx">backing_value</span><span class="p">,</span> <span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">))</span>
+        <span class="nx">change_notification_trigger</span><span class="p">(</span><span class="nx">target_accessor</span><span class="p">(),</span> <span class="nx">target_accessor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nx">ret_val</span>
+
+    <span class="nx">promote</span> <span class="nx">method</span> <span class="k">for</span> <span class="nx">method</span> <span class="k">in</span> <span class="nx">change_causing_methods</span>
+
+    <span class="nv">promote = </span><span class="nf">(method) -&gt;</span>
+      <span class="k">if</span> <span class="nx">backing_value</span><span class="p">[</span><span class="nx">method</span><span class="p">]</span>
+        <span class="nx">target_accessor</span><span class="p">[</span><span class="nx">method</span><span class="p">]</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">bind</span> <span class="nx">backing_value</span><span class="p">[</span><span class="nx">method</span><span class="p">],</span> <span class="nx">backing_value</span>
+
+    <span class="nx">promote</span> <span class="nx">method</span> <span class="k">for</span> <span class="nx">method</span> <span class="k">in</span> <span class="nx">other_methods</span>
+
+  <span class="nv">create_accessor = </span><span class="nf">(property, source_object, target_object) -&gt;</span>
+    <span class="nv">source_val = </span><span class="nx">source_object</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nx">source_val</span><span class="o">?</span> <span class="o">and</span> <span class="nx">is_value_that_should_be_accessorized</span> <span class="nx">source_val</span>
+      <span class="nx">source_object</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span> <span class="o">=</span> <span class="nx">api</span><span class="p">(</span><span class="nx">source_object</span><span class="p">[</span><span class="nx">property</span><span class="p">])</span>
+
+    <span class="nv">change_notification_trigger = </span><span class="kc">undefined</span>
+
+    <span class="nv">simple_accessor = </span><span class="nf">(val) -&gt;</span>
+      <span class="k">return</span> <span class="nx">_</span><span class="p">(</span><span class="nx">source_object</span><span class="p">[</span><span class="nx">property</span><span class="p">])</span> <span class="k">if</span> <span class="nx">val</span> <span class="o">==</span> <span class="nx">_</span>
+
+      <span class="k">return</span> <span class="nx">source_object</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span> <span class="nx">unless</span> <span class="nx">val</span><span class="o">?</span>
+
+      <span class="nx">source_object</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span> <span class="o">=</span> <span class="k">if</span> <span class="nx">is_value_that_should_be_accessorized</span> <span class="nx">val</span> <span class="k">then</span> <span class="nx">api</span> <span class="nx">val</span> <span class="k">else</span> <span class="nx">val</span>
+      <span class="nx">toggle_promoted_array_methods</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">accessor</span><span class="p">,</span> <span class="nx">change_notification_trigger</span>
+      <span class="nx">change_notification_trigger</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">accessor</span><span class="p">)</span>
+      <span class="k">return</span> <span class="nx">target_object</span>
+
+    <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span> <span class="nx">source_val</span>
+
+      <span class="nv">accessor = </span><span class="nf">(valOrIndex, indexedVal) -&gt;</span>
+        <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span><span class="nx">valOrIndex</span><span class="p">)</span> <span class="o">and</span> <span class="nx">indexedVal</span><span class="o">?</span>
+          <span class="k">return</span> <span class="nx">_</span><span class="p">(</span><span class="nx">source_object</span><span class="p">[</span><span class="nx">property</span><span class="p">][</span><span class="nx">valOrIndex</span><span class="p">])</span> <span class="k">if</span> <span class="nx">indexedVal</span> <span class="o">==</span> <span class="nx">_</span>
+
+          <span class="nx">source_object</span><span class="p">[</span><span class="nx">property</span><span class="p">][</span><span class="nx">valOrIndex</span><span class="p">]</span> <span class="o">=</span> <span class="k">if</span> <span class="nx">is_value_that_should_be_accessorized</span> <span class="nx">indexedVal</span> <span class="k">then</span> <span class="nx">api</span> <span class="nx">indexedVal</span> <span class="k">else</span> <span class="nx">indexedVal</span>
+          <span class="nx">change_notification_trigger</span><span class="p">(</span><span class="nx">indexedVal</span><span class="p">,</span> <span class="nx">accessor</span><span class="p">)</span>
+          <span class="k">return</span> <span class="nx">target_object</span>
+
+        <span class="k">return</span> <span class="nx">source_object</span><span class="p">[</span><span class="nx">property</span><span class="p">][</span><span class="nx">valOrIndex</span><span class="p">]</span> <span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isNumber</span> <span class="nx">valOrIndex</span>
+        <span class="k">return</span> <span class="nx">simple_accessor</span><span class="p">(</span><span class="nx">valOrIndex</span><span class="p">)</span>
+    <span class="k">else</span> <span class="nv">accessor = </span><span class="nx">simple_accessor</span>
+
+    <span class="nv">accessor.__accessorized_accessor = </span><span class="kc">true</span>
+
+    <span class="nv">change_notification_trigger = </span><span class="nx">api</span><span class="p">.</span><span class="nx">mixins</span><span class="p">.</span><span class="nx">change_notification</span> <span class="nx">accessor</span>
+    <span class="nx">toggle_promoted_array_methods</span> <span class="nx">source_val</span><span class="p">,</span> <span class="nx">accessor</span><span class="p">,</span> <span class="nx">change_notification_trigger</span>
+    <span class="nx">api</span><span class="p">.</span><span class="nx">mixins</span><span class="p">.</span><span class="nx">json_serialization</span> <span class="nx">accessor</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="nx">source_object</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span>
+
+    <span class="nx">target_object</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span> <span class="o">=</span> <span class="nx">accessor</span>
+
+
+  <span class="nv">api = </span><span class="nf">(target, recurse=true) -&gt;</span>
+    <span class="k">if</span> <span class="nx">api</span><span class="p">.</span><span class="nx">isAccessorized</span> <span class="nx">target</span> <span class="k">then</span> <span class="k">return</span> <span class="nx">target</span>
+
+    <span class="nv">wrapped = </span><span class="nx">newFrom</span> <span class="nx">target</span>
+
+    <span class="nv">should_create_accessor_for = </span><span class="nf">(property) -&gt;</span>
+      <span class="k">typeof</span> <span class="nx">target</span><span class="p">[</span><span class="nx">property</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;function&#39;</span>
+
+    <span class="nx">create_accessor</span><span class="p">(</span><span class="nx">property</span><span class="p">,</span> <span class="nx">target</span><span class="p">,</span> <span class="nx">wrapped</span><span class="p">)</span> <span class="k">for</span> <span class="nx">own</span> <span class="nx">property</span> <span class="k">of</span> <span class="nx">target</span> <span class="k">when</span> <span class="nx">should_create_accessor_for</span> <span class="nx">property</span>
+
+    <span class="nv">wrapped.__accessorized_object = </span><span class="kc">yes</span>
+
+    <span class="nx">api</span><span class="p">.</span><span class="nx">mixins</span><span class="p">.</span><span class="nx">json_serialization</span> <span class="nx">wrapped</span><span class="p">,</span> <span class="nx">target</span>
+    <span class="nx">api</span><span class="p">.</span><span class="nx">mixins</span><span class="p">.</span><span class="nx">add_accessor</span> <span class="nx">wrapped</span><span class="p">,</span> <span class="nx">target</span>
+
+    <span class="k">return</span> <span class="nx">wrapped</span>
+
+
+  <span class="nv">api.isAccessorized = </span><span class="nf">(obj) -&gt;</span>
+    <span class="k">return</span> <span class="kc">no</span> <span class="k">if</span> <span class="o">not</span> <span class="nx">obj</span><span class="o">?</span>
+    <span class="k">return</span> <span class="p">{</span><span class="nv">kind : </span><span class="s1">&#39;object&#39;</span> <span class="p">}</span> <span class="k">if</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">__accessorized_object</span>
+    <span class="k">return</span> <span class="p">{</span><span class="nv">kind : </span><span class="s1">&#39;accessor&#39;</span> <span class="p">}</span> <span class="k">if</span> <span class="nx">obj</span><span class="p">.</span><span class="nx">__accessorized_accessor</span>
+    <span class="k">return</span> <span class="kc">no</span>
+
+
+  <span class="nv">api.mixins = </span><span class="p">{}</span>
+
+  <span class="nv">api.mixins.add_accessor = </span><span class="nf">(target, backer) -&gt;</span>
+    <span class="nv">target.addAccessor = </span><span class="nf">(name, initialValue=undefined) -&gt;</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">api</span><span class="p">.</span><span class="nx">errors</span><span class="p">.</span><span class="nx">PropertyAlreadyExistsError</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="k">if</span> <span class="nx">name</span> <span class="k">of</span> <span class="nx">target</span>
+      <span class="nx">backer</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">initialValue</span>
+      <span class="nx">create_accessor</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">backer</span><span class="p">,</span> <span class="nx">target</span>
+
+  <span class="nv">api.mixins.change_notification = </span><span class="nf">(target) -&gt;</span>
+    <span class="nv">subscriptions = </span><span class="p">[]</span>
+
+    <span class="nv">target.subscribe = </span><span class="nf">(event_handler) -&gt;</span>
+      <span class="nx">subscriptions</span><span class="p">.</span><span class="nx">push</span> <span class="nx">event_handler</span>
+      <span class="nx">event_handler</span> <span class="nx">target</span><span class="p">(),</span> <span class="nx">target</span>
+      <span class="k">return</span> <span class="nx">event_handler</span>
+
+    <span class="nv">target.unsubscribe = </span><span class="nf">(event_handler) -&gt;</span>
+      <span class="nv">subscriptions = </span><span class="nx">_</span><span class="p">(</span><span class="nx">subscriptions</span><span class="p">).</span><span class="nx">reject</span> <span class="p">(</span><span class="nx">existing</span><span class="p">)</span> <span class="o">=&gt;</span>
+        <span class="nx">existing</span> <span class="o">==</span> <span class="nx">event_handler</span>
+
+    <span class="k">return</span> <span class="nf">(new_value, accessor) -&gt;</span>
+      <span class="nx">handler</span><span class="p">(</span><span class="nx">new_value</span><span class="p">,</span> <span class="nx">accessor</span><span class="p">)</span> <span class="k">for</span> <span class="nx">handler</span> <span class="k">in</span> <span class="nx">subscriptions</span>
+
+  <span class="nv">is_accessor = </span><span class="nf">(property) -&gt;</span>
+    <span class="nv">sniff = </span><span class="nx">api</span><span class="p">.</span><span class="nx">isAccessorized</span> <span class="nx">property</span>
+    <span class="k">return</span> <span class="kc">false</span> <span class="nx">unless</span> <span class="nx">sniff</span>
+    <span class="k">return</span> <span class="nx">sniff</span><span class="p">.</span><span class="nx">kind</span> <span class="o">is</span> <span class="s1">&#39;accessor&#39;</span>
+
+  <span class="nv">api.mixins.json_serialization = </span><span class="nf">(target, backer) -&gt;</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span> <span class="s1">&#39;can only mix-in on accessorized objects&#39;</span> <span class="nx">unless</span> <span class="nx">api</span><span class="p">.</span><span class="nx">isAccessorized</span> <span class="nx">target</span>
+
+    <span class="nv">target.toJSON = </span><span class="o">-&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>we allow a function here just in case the property backer wasn't an object, this lets us always dereference the property just in time</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nv">val = </span><span class="k">if</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span> <span class="nx">backer</span> <span class="k">then</span> <span class="nx">backer</span><span class="p">()</span> <span class="k">else</span> <span class="nx">backer</span>
+      <span class="k">return</span> <span class="nx">val</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">()</span> <span class="k">if</span> <span class="nx">val</span><span class="p">.</span><span class="nx">toJSON</span><span class="o">?</span>
+      <span class="k">return</span> <span class="nx">val</span>
+
+
+  <span class="nv">api.errors =</span>
+    <span class="nv">PropertyAlreadyExistsError : </span><span class="k">class</span> <span class="nx">PropertyAlreadyExistsError</span> <span class="k">extends</span> <span class="nb">Error</span>
+      <span class="nv">constructor : </span><span class="nf">(@attemptedPropertyName) -&gt;</span>
+        <span class="vi">@name = </span><span class="s1">&#39;PropertyAlreadyExistsError&#39;</span>
+        <span class="vi">@message = </span><span class="s2">&quot;The name of the property you are attempting to add [#{@attemptedPropertyName}] already exists on this object&#39;s prototype chain.&quot;</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>export the api</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="nx">api</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

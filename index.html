@@ -1,100 +1,250 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset='utf-8'>
+<!DOCTYPE html> <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">      <title>accessorize.js</title>   <style>     body {       font-size: 16px;       line-height: 24px;       background: #fff url("bg.png");       color: #252519;       font-family: "Palatino Linotype", "Book Antiqua", Palatino, FreeSerif, serif;       padding: 0 0 50px 50px;     }     div.container {       width: 720px;       margin: 50px 0 50px 50px;     }     p {       width: 550px;     }       #documentation p {         margin-bottom: 4px;       }     a, a:visited {       padding: 0 2px;       text-decoration: none;       background: #dbe6f3;       color: #3f6fa5;     }     a:active, a:hover {       color: #dbe6f3;       background: #3f6fa5;     }     h1, h2, h3, h4, h5, h6 {       margin-top: 40px;       width: 550px;       line-height: 1.25em;     }     b.header {       font-size: 18px;     }     span.alias {       font-size: 14px;       font-style: italic;       margin-left: 20px;     }     table, tr, td {       margin: 0; padding: 0;     }       td {         padding: 2px 12px 2px 0;       }     ul {       list-style-type: circle;       padding: 0 0 0 20px;     }       li {         width: 500px;         margin-bottom: 10px;       }     code, pre, tt {       font-family: Monaco, Consolas, "Lucida Console", monospace;       font-size: 12px;       line-height: 18px;       color: #555529;     }       pre {         font-size: 12px;         padding: 2px 0 2px 12px;         border-left: 6px solid #aaaa99;         margin: 0px 0 30px;       }   </style> </head> <body>   <h1>accessorize.js</h1>        <em>Add fancy-ass-observable-hyper-helpful accessors to any object.</em>         <h3>Source files:</h3>   <ol>            <li><a href="accessorize.html">accessorize.coffee</a></li>        </ol>      <p><a href="http://travis-ci.org/brendanjerwin/accessorizejs"><img src="https://secure.travis-ci.org/brendanjerwin/accessorizejs.png" alt="Build Status" title="" /></a></p>
 
-  <title>brendanjerwin/accessorizejs @ GitHub</title>
+<p><code>accessorize.js</code> makes it easy to convert plain javascript 'properties'
+into fancy-ass-observable-accessor-methods! Simply call <code>accessorize()</code> with
+your plain-old-javascript-object and get back a super-charged wrapped
+version.</p>
 
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #4f689c;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #b09763; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #b09763; }
-    h3 { text-align: center; color: #b09763; }
-    a { color: #b09763; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
-</head>
+<p><em>Unimportant Note</em>: Actually you could name <code>accessorize</code> anything you want since it's packaged as
+an <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD Module</a></p>
 
-<body>
-  <a href="http://github.com/brendanjerwin/accessorizejs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+<h2>Accessors</h2>
 
-  <div id="container">
+<p>Accessorized accessor methods will be familiar to anyone who has used
+JQuery:</p>
 
-    <div class="download">
-      <a href="http://github.com/brendanjerwin/accessorizejs/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/brendanjerwin/accessorizejs/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
-    </div>
+<p><strong>Getter:</strong> <code>var foo = obj.propertyName()</code></p>
 
-    <h1><a href="http://github.com/brendanjerwin/accessorizejs">accessorizejs</a>
-      <span class="small">by <a href="http://github.com/brendanjerwin">brendanjerwin</a></span></h1>
+<p><strong>Setter:</strong> <code>obj.propertyName(newValue)</code></p>
 
-    <div class="description">
-      Add observable accessors to any object.
-    </div>
+<p><em>But wait! There's more!</em></p>
 
-    <p>`accessorize.js` makes it easy to convert plain javascript 'properties'
-into fancy-ass-observable-accessor-methods!</p><h2>License</h2>
-<p>This software is licensed under the "MIT License":
+<h2>Change Notifications (AKA: Observables)</h2>
 
-Copyright (c) 2011 Brendan Erwin and contributors.
+<p>In addition to the lovely accessor semantics, you'll also get change
+notification too!</p>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
+<p>```javascript</p>
+
+<p>var obj = accessorize({
+    propertyOne : "value",
+    propertyTwo : "another value"
+});</p>
+
+<p>obj.propertyOne.subscribe(function(newValue){
+    alert("Property One changed to " + newValue);
+});</p>
+
+<p>obj.propertyOne("some new value"); //What do you think happens now?</p>
+
+<p>```</p>
+
+<h2>Array Accessors</h2>
+
+<p>The array accessors have a couple of special powers themselves.</p>
+
+<p>In addition to the normal getter/setter behavior of the regular
+accessors, array accessors offer indexing variations of the getters and
+setters:</p>
+
+<p>```javascript</p>
+
+<p>var obj = accessorize({
+    arrayProperty = ["hello", "world"]
+});</p>
+
+<p>//indexing getter
+var item = obj.arrayProperty(1);
+alert(item); // alerts: "world"</p>
+
+<p>//indexing setter
+obj.arrayProperty(0,"goodbye");
+alert(obj.arrayProperty(0)); // alerts: "goodbye"</p>
+
+<p>```</p>
+
+<p>Finally, array accessors surface the standard array methods directly on
+the accessor object itself. This lets array accessors be used a lot like
+an array would be in many cases. It also provides change notification if
+any of the mutator methods are called.</p>
+
+<p><strong>A not-really-all-that-exciting example:</strong></p>
+
+<p>```javascript</p>
+
+<p>//You can do this:</p>
+
+<p>var combined = obj.arrayProperty.concat([1,2,3]);</p>
+
+<p>//instead of this:</p>
+
+<p>var combined = obj.arrayProperty().concat([1,2,3]);</p>
+
+<p>```</p>
+
+<p><strong>A more exciting example:</strong></p>
+
+<p><em>The mutator methods are more interesting, since we get change
+notifications when they are called.</em></p>
+
+<p>```javascript</p>
+
+<p>var obj = accessorize({
+    arrayProperty = ["hello", "world"]
+});</p>
+
+<p>obj.arrayProperty.subscribe(function(){ alert("Changed!"); });</p>
+
+<p>obj.arrayProperty.sort() // alerts: "Changed!"</p>
+
+<p>```</p>
+
+<p>The following <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array">methods</a> are promoted to the accessor:</p>
+
+<p><strong>Causes Change Notification:</strong></p>
+
+<ul>
+<li>pop</li>
+<li>push</li>
+<li>reverse</li>
+<li>shift</li>
+<li>sort</li>
+<li>splice</li>
+<li>unshift</li>
+</ul>
+
+<p><strong>No Change to Property Value:</strong></p>
+
+<ul>
+<li>concat</li>
+<li>join</li>
+<li>slice</li>
+<li>indexOf *</li>
+<li>lastIndexOf *</li>
+</ul>
+
+<p><em>* These methods are not natively provided by some browsers (IE up to 8). When they are not available, they are not promoted; but if they are patched in with a polyfill prior to accessorizing an object they will be promoted.</em></p>
+
+<h2>Setter Chaining</h2>
+
+<p>Setter calls can be chained, enabling nicely formatted chunks of code:</p>
+
+<p>```javascript</p>
+
+<p>var person = accessorize({
+    addresses : [],
+    firstName : "",
+    lastName : "",
+    favoriteColor : ""
+});</p>
+
+<p>//Here it is, beautiful assignment blocks!
+person
+    .firstName("Joe")
+    .lastName("Blow")
+    .addresses(["123 Any Street", "58 Ave. Q"])
+    .favoriteColor("Red");</p>
+
+<p>//Wasn't that nice?</p>
+
+<p>```</p>
+
+<h2>Underscore.js Integration</h2>
+
+<p>Underscore integration opens up a whole universe of helpful
+functionality on your data. See: <a href="http://documentcloud.github.com/underscore/">underscore.js</a></p>
+
+<p>If underscore is passed into an accessor it will return an underscore wrapped instance of the property value:</p>
+
+<p><code>obj.arrayProperty(_).pluck('blah')</code></p>
+
+<p>If underscore.string is loaded:</p>
+
+<p><code>obj.stringProperty(_).chain().trim().capitalize().value()</code></p>
+
+<p>Also, if the accessor is an Array accessor, you can retrieve an
+underscore wrapped instance at a given index:</p>
+
+<p><code>obj.arrayProperty(1,_).trim()</code></p>
+
+<h2>Identify Accessorized Objects</h2>
+
+<p><code>isAccessorized()</code> is available so that you can
+identify which of your objects have been accessorized.</p>
+
+<p>```javascript</p>
+
+<p>var source = {
+    propertyOne : "value",
+    propertyTwo : "another value"
+}</p>
+
+<p>if (accessorize.isAccessorized(source)) {
+    alert("This doesn't happen!");
+}</p>
+
+<p>var obj = accessorize(source);</p>
+
+<p>if (accessorize.isAccessorized(obj)) {
+    alert("But this does!");
+}</p>
+
+<p>```</p>
+
+<p>If an object <em>is</em> accessorized, <code>isAccessorized()</code> returns an object
+with a <code>kind</code> property: <code>'object'</code> if the accessorized object is a
+wrapped object, <code>'accessor'</code> if it is an accessor.</p>
+
+<h2>JSON Serialization</h2>
+
+<p>Care has been taken, and <code>toJSON()</code> methods written, to ensure that your
+accessorized objects will serialize to JSON like you'd expect.</p>
+
+<p>```javascript</p>
+
+<p>var person = accessorize({
+    addresses : ["123 any st.", "345 another ave."],
+    firstName : "Joe",
+    lastName : "Blow"
+});</p>
+
+<p>console.log(JSON.stringify(person))
+//{"addresses":["123 any st.","345 another ave."],"firstName":"Joe","lastName":"Blow"}</p>
+
+<p>```</p>
+
+<h2>"Why Accessor Methods? I thought ES5 has Properties already."</h2>
+
+<p>Two main reasons:</p>
+
+<ol>
+<li>Accessorize has what devs need, now, even in non-ES5 environments.</li>
+<li>The "JQuery-Style" Accessor Methods not only provide nice
+ getter/setter syntax, but they also provide a nice place to hange
+ meta-data and functions. Things like our <code>subscribe()</code> method have a
+ nicer home than they could otherwise.</li>
+</ol>
+
+<h1>LICENSE</h1>
+
+<p>This software is licensed under the "MIT License":</p>
+
+<p>Copyright (c) 2011 Brendan Erwin and contributors.</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+furnished to do so, subject to the following conditions:</p>
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.</p>
-<h2>Authors</h2>
-<p>Brendan Erwin (brendanjerwin@gmail.com)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Brendan Erwin (brendanjerwin@gmail.com)<br/>      </p>
-
-
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/brendanjerwin/accessorizejs/zipball/master">zip</a> or
-      <a href="http://github.com/brendanjerwin/accessorizejs/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/brendanjerwin/accessorizejs</pre>
-    </p>
-
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/brendanjerwin/accessorizejs">brendanjerwin/accessorizejs</a>
-    </div>
-
-  </div>
-
-  
-</body>
-</html>
+THE SOFTWARE.</p> </body> </html>
